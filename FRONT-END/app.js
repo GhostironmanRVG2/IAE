@@ -13,6 +13,8 @@ module.exports={
             response.write("ALO");
             response.end();
             break;
+            case '/someroute':
+            break;
             default:
             response.writeHead(404,"FUDEU");
             response.write("Route not defined");
