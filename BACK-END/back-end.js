@@ -1,7 +1,6 @@
 //Starter version of the main app.js file
 "use strict";
 const express = require("express");
-const request = require('request');
 const app = express();
 const port = process.env.port || 4444;
 
