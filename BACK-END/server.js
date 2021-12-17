@@ -31,3 +31,4 @@ module.exports ={
 };
 require('./routes/products_route.js');
 require('./routes/users_route');
+require('./routes/customer_route');
