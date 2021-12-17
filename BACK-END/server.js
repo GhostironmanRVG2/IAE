@@ -45,5 +45,6 @@ require('./routes/products_route.js');
 require('./routes/users_route');
 require('./routes/customer_route');
 require('./routes/purchase_order_route');
+require('./routes/pdf_route');
 module.exports = app;
 require('./routes/orders_route');
