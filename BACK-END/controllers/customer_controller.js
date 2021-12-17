@@ -1,6 +1,4 @@
 const properties=require('../server');
-const { getAll } = require('./products_controller');
-
 //FUNÇÃO DE GET DE TODAS AS FATURAS DE UM C
 function getOne(req, res){
     //IR BUSCAR OS PARAMETROS AO BODY
@@ -32,5 +30,5 @@ function getOne(req, res){
 
 //EXPORTAR FUNÇÕES
 module.exports={
-    getAll: getAll,
+    getOne: getOne,
 }
