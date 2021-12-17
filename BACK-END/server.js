@@ -16,6 +16,7 @@ var moloni = new Moloni({
 	password: 'winx2021'
 });
 
+
 //USAR BODY PARSER NA NOSSA APP DE EXPRESS
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

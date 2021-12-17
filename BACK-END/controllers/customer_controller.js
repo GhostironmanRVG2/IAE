@@ -8,7 +8,7 @@ function getOne(req, res){
     const associated_id = req.sanitize('associated_id').escape();
     var params = {
         company_id: company_id,
-        customer_id: 57285941,
+        customer_id: 57184093,
         associated_id: associated_id,
     };
     //MOLONI GET ONE
