@@ -1,3 +1,4 @@
+//LIGAÇÃO Á BASE DE DADOS
 const mysql = require('mysql');
 module.exports = {
 	con: mysql.createConnection({
