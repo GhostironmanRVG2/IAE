@@ -18,6 +18,12 @@ function read(req, res) {
     });
 }
 
+/*
+function readID(req, res) {
+    const order_id = req.sanitize('order_id').escape();
+    connect.con.query('SELECT iae.order.')
+}
+*/
 
 module.exports = {
     read: read
