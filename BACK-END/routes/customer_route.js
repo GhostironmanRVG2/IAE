@@ -4,4 +4,4 @@ const customers=require('../controllers/customer_controller');
 //company_id //OBRIGATORIO 
 //customer_id e associated_id
 //Tipo: Body
-properties.app.get("/customergetone/:company_id/:customer_id/:associated_id",customers.getOne);
+properties.app.get("/customergetone/:company_id/:associated_id",customers.getOne);
