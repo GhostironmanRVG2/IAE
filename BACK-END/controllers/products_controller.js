@@ -3,9 +3,8 @@ const properties=require('../server');
 //FUNCAO GET ALL PRODUCTS MOLONI
 function getAll(req, res) {
     //IR BUSCAR OS PARAMETROS AO BODY
-    const company_id = req.body.company_id;
-    const category_id = req.body.category_id;
-    console.log(company_id);
+    const company_id = req.sanitize('company_id').escape();
+    const category_id = req.sanitize('category_id').escape();  
     //EXPLICITAR OS PARAMETROS
     var params = {
         company_id: company_id,

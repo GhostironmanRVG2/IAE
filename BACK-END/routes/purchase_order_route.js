@@ -126,3 +126,4 @@ status int
  * 
  */
 app.post("/InsertPurchaseOrder",purchase.insert);
+app.get("/teste",purchase.getauth);
