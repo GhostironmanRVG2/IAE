@@ -7,6 +7,8 @@ const app = express();
 const port = process.env.port || 4444;
 const expressSanitizer = require('express-sanitizer');
 const expressValidator = require('express-validator');
+const { createConnection } = require('net');
+
 
 //CREDENCIAIS DO MOLONI
 var moloni = new Moloni({
@@ -30,12 +32,18 @@ app.listen(port, err => {
   }
   console.log(`Listening on port ${port}`);
 });
+
 //EXPORTAR OS MODULOS APP E O MOLONI
 module.exports ={
   app: app,
   moloni: moloni,
+  //connection: connection,
 };
+
+
 require('./routes/products_route.js');
 require('./routes/users_route');
 require('./routes/customer_route');
 require('./routes/purchase_order_route');
+module.exports = app;
+require('./routes/orders_route');

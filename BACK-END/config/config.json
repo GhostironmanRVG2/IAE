@@ -1,9 +1,0 @@
-{
-    "MySQL": {
-        "username": "martins",
-        "password": "Winx2021",
-        "database": "IAIEE",
-        "host": "2.83.78.5",
-        "dialect": "mysql"
-    }
-}
