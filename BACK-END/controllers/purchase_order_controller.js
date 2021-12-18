@@ -1,6 +1,10 @@
 const {moloni}=require('../server');
 var querystring = require('querystring');
+var qs = require('qs');
+var assert = require('assert');
 const {credit,http}=require('../authtoken/molonitoken');
+const { body } = require('express-validator/check');
+const { post } = require('request');
 //FUNCAO PARA INSERIR OS DADOS NO MOLONI
 function insert(req,res){
     //FUNCAO COM O CALLBACK
@@ -10,16 +14,17 @@ function insert(req,res){
     const date= req.body.date;
     const expiration_date= req.body.expiration_date;
     const products=req.body.products;
-    console.log(products);
+
     //DADOS
-    var post_data=  querystring.stringify({
+    var post_data=  qs.stringify({
         company_id:  company_id ,
         date: date,
         expiration_date : expiration_date,
         document_set_id: 473163,
         customer_id: 57185941,
-        products: products,
+        products: products, 
     });
+
     //PASSAR OS ARGUMENTOS
     var options ={
         'method': 'POST',
