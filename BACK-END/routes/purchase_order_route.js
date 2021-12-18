@@ -13,4 +13,5 @@ products[x][qty]
 products[x][price]
 products[x][exemption_reason]
  */
+app.post("/doc",purchase.getDoc);
 app.post("/InsertPurchaseOrder",purchase.insert);

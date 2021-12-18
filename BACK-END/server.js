@@ -7,7 +7,6 @@ const app = express();
 const port = process.env.port || 4444;
 const expressSanitizer = require('express-sanitizer');
 const expressValidator = require('express-validator');
-const { createConnection } = require('net');
 
 
 //CREDENCIAIS DO MOLONI
@@ -46,5 +45,7 @@ require('./routes/users_route');
 require('./routes/customer_route');
 require('./routes/purchase_order_route');
 require('./routes/pdf_route');
-module.exports = app;
 require('./routes/orders_route');
+module.exports = {
+  app: app,
+}
