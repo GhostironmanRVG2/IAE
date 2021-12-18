@@ -1,6 +1,6 @@
 const properties=require('../server');
 
-//FUNCAO GET DOCUMENTS PDF MOLONI
+//FUNCAO GET DO PDF MOLONI
 function getPDF(req, res) {
     //IR BUSCAR OS PARAMETROS AO BODY
     const company_id = req.sanitize('company_id').escape();
