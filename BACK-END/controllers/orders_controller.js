@@ -39,8 +39,26 @@ function OrderProductByID(req, res) {
   });
 }
 
+function GetSuppliers(req, res) {
+  connect.con.query('SELECT iae.supplier.designation, iae.supplier.supplier_id FROM iae.supplier' , function(error, result){
+    //caso de erro ,manda msg de erro
+      if (error){
+        //ENVIAR STATUS DE ERRO
+        res.status(400).send({
+          "msg": "Error, something went wrong"
+      });
+      //PRINTAR NA CONSOLA ERRO
+        return console.error(error);
+      }else{
+      //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+      console.log(result);
+      res.send(result);
+      }
+  });
+}
 
 module.exports = {
     read: read,
-    OrderProductByID: OrderProductByID
+    OrderProductByID: OrderProductByID,
+    GetSuppliers: GetSuppliers
 }
