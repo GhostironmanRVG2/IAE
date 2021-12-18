@@ -13,5 +13,6 @@ products[x][qty]
 products[x][price]
 products[x][exemption_reason]
  */
-app.post("/doc",purchase.getDoc);
 app.post("/InsertPurchaseOrder",purchase.insert);
+//FAZER UM GET POR
+app.get("/PurchaseOrderByDoc/:document_id",purchase.getDoc);

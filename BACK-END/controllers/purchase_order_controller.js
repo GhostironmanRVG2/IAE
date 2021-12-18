@@ -53,7 +53,7 @@ function insert(req,res){
 function getDoc(req,res){
     //FUNCAO COM O CALLBACK
     credit(function(response){
-    var document_id=req.body.document_id;
+        const document_id = req.sanitize('document_id').escape();
     //DADOS
     var post_data=  qs.stringify({
         company_id:  205166 ,
