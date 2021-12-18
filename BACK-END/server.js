@@ -18,7 +18,7 @@ var moloni = new Moloni({
 
 //USAR BODY PARSER NA NOSSA APP DE EXPRESS
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 //SANITIZER
 app.use(expressSanitizer());
 app.use(expressValidator());
