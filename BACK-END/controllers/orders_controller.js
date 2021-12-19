@@ -2,7 +2,7 @@ const connect = require('../config/connect');
 const purchase_order_controller = require('./purchase_order_controller');
 //FUNÇÃO PARA DEOLVER OS DADOS DOORDER E SUPPLIER 
 function read(req, res) {
-    connect.con.query('SELECT iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id, iae.supplier.designation, count(iae.ordered_product.order_id) as OrderedProducts_orderid_count FROM iae.order join iae.supplier ON iae.order.supplier_id = iae.supplier.supplier_id JOIN iae.ordered_product ON iae.ordered_product.order_id = iae.order.order_id' , function(error, result){
+    connect.con.query('SELECT iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id, iae.supplier.designation, count(iae.ordered_product.order_id) as OrderedProducts_orderid_count FROM iae.order LEFT JOIN iae.supplier ON iae.order.supplier_id = iae.supplier.supplier_id LEFT JOIN iae.ordered_product ON iae.ordered_product.order_id = iae.order.order_id group by iae.order.order_id' , function(error, result){
       //caso de erro ,manda msg de erro
         if (error){
           //ENVIAR STATUS DE ERRO

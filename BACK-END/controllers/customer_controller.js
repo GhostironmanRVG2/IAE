@@ -4,14 +4,19 @@ function getOne(req, res){
     //IR BUSCAR OS PARAMETROS AO BODY
 
     const company_id = req.sanitize('company_id').escape();
-    const customer_id = req.sanitize('customer_id').escape();
     const associated_id = req.sanitize('associated_id').escape();
 
     var params = {
         company_id: company_id,
         customer_id: 57185941,
-        associated_: associated_id,
+        reverse_associated_documents: [
+            {
+                associated_id : associated_id
+            }
+        ],
     };
+    console.log(associated_id);
+    console.log(company_id);
     //MOLONI GET ONE
     properties.moloni.documents('getOne', params, function (error, result){
           //caso de erro ,manda msg de erro
@@ -24,7 +29,9 @@ function getOne(req, res){
             return console.error(error);
         }else{
             //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
-            console.log(result.document_id);
+            console.log(result.reverse_associated_documents.document_id);
+            console.log(result.company_id);
+            console.log(result.customer_id);
             res.send(result);
         }
     });
