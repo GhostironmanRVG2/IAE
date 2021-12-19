@@ -39,6 +39,7 @@ function OrderProductByID(req, res) {
   });
 }
 
+//FUNÇÃO PARA DEVOLVER TODOS OS VALORES DO SUPPLIER
 function GetSuppliers(req, res) {
   connect.con.query('SELECT iae.supplier.designation, iae.supplier.supplier_id FROM iae.supplier' , function(error, result){
     //caso de erro ,manda msg de erro
