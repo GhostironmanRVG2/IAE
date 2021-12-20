@@ -2,12 +2,27 @@ const properties=require('../server');
 //FUNÇÃO DE GET DE TODAS AS FATURAS DE UM C
 function getOne(req, res){
     //IR BUSCAR OS PARAMETROS AO BODY
+<<<<<<< HEAD
+=======
+
+    const company_id = req.sanitize('company_id').escape();
+>>>>>>> af7988ab3064c4cfb0335ecedef7d907c1cb5de8
     const associated_id = req.sanitize('associated_id').escape();
     
     var params = {
         company_id: 205166,
         customer_id: 57185941,
+<<<<<<< HEAD
+=======
+        reverse_associated_documents: [
+            {
+                associated_id : associated_id
+            }
+        ],
+>>>>>>> af7988ab3064c4cfb0335ecedef7d907c1cb5de8
     };
+    console.log(associated_id);
+    console.log(company_id);
     //MOLONI GET ONE
     properties.moloni.documents('getOne', params, function (error, result){
           //caso de erro ,manda msg de erro
@@ -20,7 +35,9 @@ function getOne(req, res){
             return console.error(error);
         }else{
             //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
-            console.log(result.document_id);
+            console.log(result.reverse_associated_documents.document_id);
+            console.log(result.company_id);
+            console.log(result.customer_id);
             res.send(result);
         }
     });
