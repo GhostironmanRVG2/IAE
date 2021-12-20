@@ -2,15 +2,11 @@ const properties=require('../server');
 //FUNÇÃO DE GET DE TODAS AS FATURAS DE UM C
 function getOne(req, res){
     //IR BUSCAR OS PARAMETROS AO BODY
-
-    const company_id = req.sanitize('company_id').escape();
-    const customer_id = req.sanitize('customer_id').escape();
     const associated_id = req.sanitize('associated_id').escape();
-
+    
     var params = {
-        company_id: company_id,
+        company_id: 205166,
         customer_id: 57185941,
-        associated_: associated_id,
     };
     //MOLONI GET ONE
     properties.moloni.documents('getOne', params, function (error, result){
