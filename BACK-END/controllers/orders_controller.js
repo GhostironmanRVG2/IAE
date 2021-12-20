@@ -57,9 +57,51 @@ function GetSuppliers(req, res) {
       }
   });
 }
+//FUNCAO PARA INSERIR NO ORDERED_PRODUCTS
+function InsertOrdered(req,res){
+  //IR BUSCAR OS DADOS
+  const order_id=req.body.order_id;
+  const description=req.body.description;
+  const quantity=req.body.quantity;
+  const unit_price=req.body.unit_price;
+  const total=req.body.total;
+  //INSERIR AQUI OS DADOS
+  var post = {
+    order_id:order_id,
+    description:description,
+    quantity:quantity,
+    unit_price:unit_price,
+    total:total
+};
+//CONEXAO
+query=connect.con.query('INSERT INTO iae.ordered_product SET ?',post,function(err,rows,fields){
+console.log(query.sql);
+if(!err){
+  res.status(200).location(rows.insertedId).send(
+    {
+      "msg": "Inserted with success"
+    }
+  );
+  console.log("Number of records inserted: "+rows.affectedRows);
+}else{
 
+if(err.code=="ER_DUP_ENTRY"){
+
+  res.status(409).send({"msg": err.code});
+  console.log('Error while performing Query.', err);
+
+
+} else res.status(400).send({"msg": err.code});
+
+
+}
+
+});
+
+}
 module.exports = {
     read: read,
     OrderProductByID: OrderProductByID,
-    GetSuppliers: GetSuppliers
+    GetSuppliers: GetSuppliers,
+    InsertOrdered: InsertOrdered,
 }

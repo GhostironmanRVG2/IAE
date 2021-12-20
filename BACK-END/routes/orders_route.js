@@ -7,4 +7,5 @@ app.get('/OrdersGetAll/', orders.read);
 app.get('/OrderProductByOrderID/:order_id', orders.OrderProductByID);
 //GET DOS VALORES DOS SUPPLIERS
 app.get('/SuppliersGetAll/', orders.GetSuppliers);
-
+//post do ordered_product
+app.post('/InsertOrderedProducts',orders.InsertOrdered);

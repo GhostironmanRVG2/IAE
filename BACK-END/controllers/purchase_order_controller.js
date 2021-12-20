@@ -41,7 +41,32 @@ function insert(req,res){
         response.on('data', function (chunk) {
           //ADICIONAR O CHUNK NA STRING
           k += chunk;
-          res.send(k);
+        });
+
+        response.on('end', function() {
+        //RESPOSTA NO FIM
+        var newparse=JSON.parse(k);
+        res.send(k);
+         
+        var options ={
+          'method': 'POST',
+          'hostname': 'localhost',
+          'path': ':4444'+response.access_token,
+          'headers': {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Content-Length': post_data.length
+            },
+            'maxRedirects': 20,
+      };
+
+        //INSERT ORDER
+        var insert_order=http.request(options)
+
+
+
+
+
+
         });
         
     });
