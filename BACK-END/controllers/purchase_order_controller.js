@@ -11,6 +11,7 @@ function insert(req,res){
     const date= req.body.date;
     const expiration_date= req.body.expiration_date;
     const products=req.body.products;
+    const supplier_id=req.body.supplier_id;
 
     //DADOS
     var post_data=  qs.stringify({
@@ -88,6 +89,7 @@ function getDoc(req,res){
         var output=[];
         //FAZER UM FOR PARA CORRER O DT
         for (let i = 0; i < dt.length; i++) {
+          console.log(dt[i].document_id);
           //CASO OS IDS SEJAM IGUAIS INSERIR OBJETO DENTRO DO OUTPUT  
           if(document_id==(dt[i].document_id)){
           //COLOCA A VARIAVEL DENTRO DO ARRAY
