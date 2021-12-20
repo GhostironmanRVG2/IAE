@@ -85,6 +85,7 @@ if(!err){
   console.log("Number of records inserted: "+rows.affectedRows);
 }else{
 
+<<<<<<< HEAD
 if(err.code=="ER_DUP_ENTRY"){
 
   res.status(409).send({"msg": err.code});
@@ -99,9 +100,58 @@ if(err.code=="ER_DUP_ENTRY"){
 });
 
 }
+=======
+
+//FUNÇÃO PARA FAZER PUT  TABELA ORDER 
+function saveOrder(req, res) {
+  //receber os dados do formuário que são enviados por post
+  const order_id = req.sanitize('order_id').escape();
+  const supplier_id = req.sanitize('supplier_id').escape();
+  const date = req.sanitize('date').escape();
+  const expire_date = req.sanitize('expire_date').escape();
+  const total = req.sanitize('total').escape();   
+  const document_id = req.sanitize('document_id').escape();
+  var query = "";
+      var post = { 
+        order_id: order_id,
+        supplier_id: supplier_id,
+        date: date,
+        expire_date: expire_date,
+        total: total,
+        document_id: document_id
+      };
+      query = connect.con.query('INSERT INTO iae.order SET ?', post, function (err, rows, fields) {
+          console.log(query.sql);
+          if (!err) {
+              res.status(200).location(rows.insertId).send({
+              "msg": "inserted with success"
+          });
+          console.log("Number of records inserted: " + rows.affectedRows);
+      } else {
+          if (err.code == "ER_DUP_ENTRY") {
+              res.status(409).send({"msg": err.code});
+              console.log('Error while performing Query.', err);
+          } else res.status(400).send({"msg": err.code});
+      }
+  });
+}
+
+
+
+
+
+
+
+
+
+>>>>>>> b897ff683a63de7ff077849049788508590dbfd6
 module.exports = {
     read: read,
     OrderProductByID: OrderProductByID,
     GetSuppliers: GetSuppliers,
+<<<<<<< HEAD
     InsertOrdered: InsertOrdered,
+=======
+    saveOrder: saveOrder
+>>>>>>> b897ff683a63de7ff077849049788508590dbfd6
 }
