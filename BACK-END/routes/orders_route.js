@@ -7,4 +7,6 @@ app.get('/OrdersGetAll/', orders.read);
 app.get('/OrderProductByOrderID/:order_id', orders.OrderProductByID);
 //GET DOS VALORES DOS SUPPLIERS
 app.get('/SuppliersGetAll/', orders.GetSuppliers);
+//POST DE UMA ORDER
+app.post('/OrderPost/', orders.saveOrder);
 
