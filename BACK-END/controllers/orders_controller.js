@@ -100,6 +100,11 @@ if(err.code=="ER_DUP_ENTRY"){
 });
 
 }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> de4f541d925d5457dc85910c69284d83e0677d9f
 //FUNÇÃO PARA FAZER PUT  TABELA ORDER 
 function saveOrder(req, res) {
   //receber os dados do formuário que são enviados por post
@@ -136,16 +141,43 @@ function saveOrder(req, res) {
 
 
 
+//FUNÇÃO GET ORDER_ID POR DOCUMENT_ID
+function GetOrderId(req, res) {
+  const document_id = req.sanitize('document_id').escape();
+  connect.con.query('SELECT iae.order.order_id FROM iae.order WHERE document_id = ?', document_id, function(error, result){
+    //caso de erro ,manda msg de erro
+      if (error){
+        //ENVIAR STATUS DE ERRO
+        res.status(400).send({
+          "msg": "Error, something went wrong"
+      });
+      //PRINTAR NA CONSOLA ERRO
+        return console.error(error);
+      }else{
+      //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+      console.log(result);
+      res.send(result);
+      }
+  });
+}
 
 
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> de4f541d925d5457dc85910c69284d83e0677d9f
 module.exports = {
     read: read,
+    GetOrderId: GetOrderId,
     OrderProductByID: OrderProductByID,
     GetSuppliers: GetSuppliers,
+<<<<<<< HEAD
     saveOrder:saveOrder,
+=======
+    saveOrder: saveOrder,
+>>>>>>> de4f541d925d5457dc85910c69284d83e0677d9f
     InsertOrdered: InsertOrdered,
 }
