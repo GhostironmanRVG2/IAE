@@ -100,11 +100,41 @@ if(err.code=="ER_DUP_ENTRY"){
 });
 
 }
-<<<<<<< HEAD
-=======
 
 
->>>>>>> de4f541d925d5457dc85910c69284d83e0677d9f
+//FUNCAO PARA INSERIR NO ORDERED_PRODUCTS
+function InsertOrderedArray(req,res){
+  //IR BUSCAR OS DADOS
+  const array=req.body.array;
+  console.log(array);
+//CONEXAO
+query=connect.con.query('INSERT INTO iae.ordered_product SET (order_id,description,quantity,unit_price,total)',array,function(err,rows,fields){
+console.log(query.sql);
+if(!err){
+  res.status(200).location(rows.insertedId).send(
+    {
+      "msg": "Inserted with success"
+    }
+  );
+  console.log("Number of records inserted: "+rows.affectedRows);
+}else{
+
+
+if(err.code=="ER_DUP_ENTRY"){
+
+  res.status(409).send({"msg": err.code});
+  console.log('Error while performing Query.', err);
+
+
+} else res.status(400).send({"msg": err.code});
+
+
+}
+
+});
+
+}
+
 //FUNÇÃO PARA FAZER PUT  TABELA ORDER 
 function saveOrder(req, res) {
   //receber os dados do formuário que são enviados por post
@@ -165,19 +195,12 @@ function GetOrderId(req, res) {
 
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> de4f541d925d5457dc85910c69284d83e0677d9f
 module.exports = {
     read: read,
     GetOrderId: GetOrderId,
     OrderProductByID: OrderProductByID,
     GetSuppliers: GetSuppliers,
-<<<<<<< HEAD
-    saveOrder:saveOrder,
-=======
     saveOrder: saveOrder,
->>>>>>> de4f541d925d5457dc85910c69284d83e0677d9f
     InsertOrdered: InsertOrdered,
+    InsertOrderedArray:InsertOrderedArray,
 }

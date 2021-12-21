@@ -1,7 +1,8 @@
 var qs = require('qs');
 const {credit,http}=require('../authtoken/molonitoken');
 const https=require('https');
-const { header } = require('express-validator/check');
+const connect = require('../config/connect');
+
 //FUNCAO PARA INSERIR OS DADOS NO MOLONI
 function insert(req,res){
     //FUNCAO COM O CALLBACK
@@ -90,7 +91,6 @@ function insert(req,res){
           response.on('end', function() {
             //RESPOSTA NO FIM
             var inser_order_output=JSON.parse(l);
-            console.log(inser_order_output);
         });
 
         });
@@ -99,52 +99,71 @@ function insert(req,res){
 
 
 
-//FAZER O POST DOS PRODUCTS
-for (let k = 0; k < products.length; k++) {
-  
- //INSERIR NOS ORDERED
- var posted_ordered=  qs.stringify({
-  order_id: order_id,
-  description: products[i].name,
-  quantity: products[i].qty,
-  unit_price: products[i].price,
-  total: total,
-  });
-  //OPCOES PARA ESTA LIGACAO
-  var options_ordered ={
-    'method': 'POST',
-    'hostname': '127.0.0.1',
-    'port': 4444,
-    'path': '/InsertOrderedProducts',
-    'headers': {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': posted_ordered.length
-      },
-      'maxRedirects': 20,
-};
 
-  //INSERT ORDER
-  var insert_ordered=http.request(options_ordered,function(response){
-  let o='';
+
+
+var options_getid=new URL("http://localhost:4444/OrderIdGetByDocumentId/"+newparse.document_id);
+var getid=http.request(options_getid,function(response){
+  let p='';
    //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
   response.on('data', function (chunk) {
     //ADICIONAR O CHUNK NA STRING
-    o+= chunk;
+    p+= chunk;
 
   });
 
     response.on('end', function() {
       //RESPOSTA NO FIM
-      var insert_ordered_output=JSON.parse(o);
-      res.send(inser_order_output);
+      var id_parse=JSON.parse(p);
+      //FAZER O POST DOS PRODUCTS
+      var posted_ordered=[];
+      for (let k = 0; k < products.length; k++) {
+        posted_ordered.push([id_parse[0].order_id,products[k].name,parseFloat(products[k].qty),parseFloat(products[k].price),products[k].qty*products[k].price]);
+      }
+      //SQL ARG
+      var sql = "INSERT INTO iae.ordered_product (order_id,description, quantity,unit_price,total) VALUES ?";      
+      //CONEXAO
+query=connect.con.query(sql,[posted_ordered],function(err,rows,fields){
+  console.log(query.sql);
+  if(!err){
+    res.status(200).location(rows.insertedId).send(
+      {
+        "msg": "Inserted with success"
+      }
+    );
+    console.log("Number of records inserted: "+rows.affectedRows);
+  }else{
+  
+  
+  if(err.code=="ER_DUP_ENTRY"){
+  
+    res.status(409).send({"msg": err.code});
+    console.log('Error while performing Query.', err);
+  
+  
+  } else res.status(400).send({"msg": err.code});
+  
+  
+  }
+  
+  });
       
+
+
+
+
   });
 
   });
-  insert_ordered.write(posted_ordered);
-  insert_ordered.end();
-  
-}
+  getid.end();
+
+
+
+
+
+
+
+
       
 
 

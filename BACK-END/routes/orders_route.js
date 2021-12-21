@@ -9,10 +9,9 @@ app.get('/OrderProductByOrderID/:order_id', orders.OrderProductByID);
 app.get('/SuppliersGetAll/', orders.GetSuppliers);
 //post do ordered_product
 app.post('/InsertOrderedProducts',orders.InsertOrdered);
+//post do ordered_product ARRAY
+app.post('/InsertOrderedProductsArray',orders.InsertOrderedArray);
 //POST DE UMA ORDER
 app.post('/OrderPost/', orders.saveOrder);
-<<<<<<< HEAD
-=======
 //GET DO ORDER_ID PELO DOCUMENT_ID
 app.get('/OrderIdGetByDocumentId/:document_id', orders.GetOrderId);
->>>>>>> de4f541d925d5457dc85910c69284d83e0677d9f
