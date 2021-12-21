@@ -8,7 +8,7 @@ function insert(req,res){
     //FUNCAO COM O CALLBACK
     credit(function(response){
     //IR BUSCAR PARAMETROS AO BODY
-    const company_id = req.body.company_id; 
+    const company_id = 205166; 
     const date= req.body.date;
     const expiration_date= req.body.expiration_date;
     const products=req.body.products;
@@ -21,6 +21,7 @@ function insert(req,res){
         expiration_date : expiration_date,
         document_set_id: 473163,
         customer_id: 57185941,
+        status: 1,
         products: products, 
     });
 
