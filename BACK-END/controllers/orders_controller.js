@@ -85,7 +85,7 @@ if(!err){
   console.log("Number of records inserted: "+rows.affectedRows);
 }else{
 
-<<<<<<< HEAD
+
 if(err.code=="ER_DUP_ENTRY"){
 
   res.status(409).send({"msg": err.code});
@@ -100,8 +100,6 @@ if(err.code=="ER_DUP_ENTRY"){
 });
 
 }
-=======
-
 //FUNÇÃO PARA FAZER PUT  TABELA ORDER 
 function saveOrder(req, res) {
   //receber os dados do formuário que são enviados por post
@@ -144,14 +142,10 @@ function saveOrder(req, res) {
 
 
 
->>>>>>> b897ff683a63de7ff077849049788508590dbfd6
 module.exports = {
     read: read,
     OrderProductByID: OrderProductByID,
     GetSuppliers: GetSuppliers,
-<<<<<<< HEAD
+    saveOrder:saveOrder,
     InsertOrdered: InsertOrdered,
-=======
-    saveOrder: saveOrder
->>>>>>> b897ff683a63de7ff077849049788508590dbfd6
 }

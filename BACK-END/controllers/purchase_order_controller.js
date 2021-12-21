@@ -46,29 +46,121 @@ function insert(req,res){
         response.on('end', function() {
         //RESPOSTA NO FIM
         var newparse=JSON.parse(k);
-        res.send(k);
-         
+        console.log(newparse);
+        //DADOS
+        //POST DATA
+        //TOTAL
+    var total=0;
+    for (let i = 0; i < products.length; i++) {
+      //TOTAL DE TUDO
+      total=total+(products[i].qty*products[i].price);
+    }
+    
+    var posted=  qs.stringify({
+      supplier_id: supplier_id,
+      date:date ,
+      expire_date:expiration_date ,
+      total: total,
+      document_id: newparse.document_id,
+
+        });
+        //OPCOES PARA ESTA LIGACAO
         var options ={
           'method': 'POST',
-          'hostname': 'localhost',
-          'path': ':4444'+response.access_token,
+          'hostname': '127.0.0.1',
+          'port': 4444,
+          'path': '/OrderPost',
           'headers': {
               'Content-Type': 'application/x-www-form-urlencoded',
-              'Content-Length': post_data.length
+              'Content-Length': posted.length
             },
             'maxRedirects': 20,
       };
-
+      
         //INSERT ORDER
-        var insert_order=http.request(options)
-
-
-
-
-
+        var insert_order=http.request(options,function(response){
+        let l='';
+         //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+        response.on('data', function (chunk) {
+          //ADICIONAR O CHUNK NA STRING
+          l += chunk;
 
         });
-        
+
+          response.on('end', function() {
+            //RESPOSTA NO FIM
+            var inser_order_output=JSON.parse(l);
+            console.log(inser_order_output);
+        });
+
+        });
+        insert_order.write(posted);
+        insert_order.end();
+
+
+
+//FAZER O POST DOS PRODUCTS
+for (let k = 0; k < products.length; k++) {
+  
+ //INSERIR NOS ORDERED
+ var posted_ordered=  qs.stringify({
+  order_id: order_id,
+  description: products[i].name,
+  quantity: products[i].qty,
+  unit_price: products[i].price,
+  total: total,
+  });
+  //OPCOES PARA ESTA LIGACAO
+  var options_ordered ={
+    'method': 'POST',
+    'hostname': '127.0.0.1',
+    'port': 4444,
+    'path': '/InsertOrderedProducts',
+    'headers': {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': posted_ordered.length
+      },
+      'maxRedirects': 20,
+};
+
+  //INSERT ORDER
+  var insert_ordered=http.request(options_ordered,function(response){
+  let o='';
+   //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+  response.on('data', function (chunk) {
+    //ADICIONAR O CHUNK NA STRING
+    o+= chunk;
+
+  });
+
+    response.on('end', function() {
+      //RESPOSTA NO FIM
+      var insert_ordered_output=JSON.parse(o);
+      res.send(inser_order_output);
+      
+  });
+
+  });
+  insert_ordered.write(posted_ordered);
+  insert_ordered.end();
+  
+}
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+        })
+    
     });
     request.write(post_data);
     request.end();
