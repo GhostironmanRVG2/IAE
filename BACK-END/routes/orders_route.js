@@ -7,11 +7,9 @@ app.get('/OrdersGetAll/', orders.read);
 app.get('/OrderProductByOrderID/:order_id', orders.OrderProductByID);
 //GET DOS VALORES DOS SUPPLIERS
 app.get('/SuppliersGetAll/', orders.GetSuppliers);
-<<<<<<< HEAD
 //post do ordered_product
 app.post('/InsertOrderedProducts',orders.InsertOrdered);
-=======
 //POST DE UMA ORDER
 app.post('/OrderPost/', orders.saveOrder);
-
->>>>>>> b897ff683a63de7ff077849049788508590dbfd6
+//GET DO ORDER_ID PELO DOCUMENT_ID
+app.get('/OrderIdGetByDocumentId/:document_id', orders.GetOrderId);

@@ -85,7 +85,7 @@ if(!err){
   console.log("Number of records inserted: "+rows.affectedRows);
 }else{
 
-<<<<<<< HEAD
+
 if(err.code=="ER_DUP_ENTRY"){
 
   res.status(409).send({"msg": err.code});
@@ -100,7 +100,7 @@ if(err.code=="ER_DUP_ENTRY"){
 });
 
 }
-=======
+
 
 //FUNÇÃO PARA FAZER PUT  TABELA ORDER 
 function saveOrder(req, res) {
@@ -138,20 +138,35 @@ function saveOrder(req, res) {
 
 
 
+//FUNÇÃO GET ORDER_ID POR DOCUMENT_ID
+function GetOrderId(req, res) {
+  const document_id = req.sanitize('document_id').escape();
+  connect.con.query('SELECT iae.order.order_id FROM iae.order WHERE document_id = ?', document_id, function(error, result){
+    //caso de erro ,manda msg de erro
+      if (error){
+        //ENVIAR STATUS DE ERRO
+        res.status(400).send({
+          "msg": "Error, something went wrong"
+      });
+      //PRINTAR NA CONSOLA ERRO
+        return console.error(error);
+      }else{
+      //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+      console.log(result);
+      res.send(result);
+      }
+  });
+}
 
 
 
 
 
-
->>>>>>> b897ff683a63de7ff077849049788508590dbfd6
 module.exports = {
     read: read,
+    GetOrderId: GetOrderId,
     OrderProductByID: OrderProductByID,
     GetSuppliers: GetSuppliers,
-<<<<<<< HEAD
+    saveOrder: saveOrder,
     InsertOrdered: InsertOrdered,
-=======
-    saveOrder: saveOrder
->>>>>>> b897ff683a63de7ff077849049788508590dbfd6
 }
