@@ -15,3 +15,5 @@ app.post('/InsertOrderedProductsArray',orders.InsertOrderedArray);
 app.post('/OrderPost/', orders.saveOrder);
 //GET DO ORDER_ID PELO DOCUMENT_ID
 app.get('/OrderIdGetByDocumentId/:document_id', orders.GetOrderId);
+//DELETE DO ORDER_ID E ORDERED_PRODUCT PELO ORDER_ID
+app.delete('/OrderOrderedDeleteByOrderId/:order_id', orders.DeleteOrderID);

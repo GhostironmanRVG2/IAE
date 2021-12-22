@@ -192,6 +192,27 @@ function GetOrderId(req, res) {
 }
 
 
+//FUNÇÃO PARA FAZER DELETE DE UMA ORDER ID E ORDERED_PRODUCT DANDO O ORDER_ID
+function DeleteOrderID(req, res) {
+  //criar e executar a query de leitura na BD
+  const order_id = req.sanitize('order_id').escape();
+  connect.con.query('DELETE from iaie.order, iaie.ordered_product where iaie.order.order_id = ?', order_id, function (err, rows, fields) {
+      if (!err) {
+          //verifica os resultados se o número de linhas for 0 devolve dados não encontrados, caso contrário envia os resultados (rows).
+          if (rows.length == 0) {
+              res.status(404).send({
+                  "msg": "data not found"
+              });
+          } else {
+              res.status(200).send({
+                  "msg": "success"
+              });
+          }
+      } else
+      console.log('Error while performing Query.', err);
+  });
+}
+
 
 
 
@@ -203,4 +224,5 @@ module.exports = {
     saveOrder: saveOrder,
     InsertOrdered: InsertOrdered,
     InsertOrderedArray:InsertOrderedArray,
+    DeleteOrderID: DeleteOrderID,
 }
