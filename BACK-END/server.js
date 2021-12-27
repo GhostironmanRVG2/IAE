@@ -47,6 +47,3 @@ require('./routes/purchase_order_route');
 require('./routes/pdf_route');
 require('./routes/orders_route');
 require('./routes/geo_locationroute');
-module.exports = {
-  app: app,
-}

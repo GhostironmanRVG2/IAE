@@ -38,8 +38,30 @@ function getOne(req, res){
     });
 }
 
+function getAll(req, res){
+    //IR BUSCAR OS PARAMETROS AO BODY
+    var params = {
+        company_id: 205166,
+    };
+    //MOLONI GET ONE
+    properties.moloni.customers('getAll', params, function (error, result){
+          //caso de erro ,manda msg de erro
+          if (error){
+            //ENVIAR STATUS DE ERRO
+            res.status(400).send({
+              "msg": "Error, something went wrong"
+            });
+            //PRINTAR NA CONSOLA ERRO
+            return console.error(error);
+        }else{
+            //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+            res.send(result);
+        }
+    });
+}
 
 //EXPORTAR FUNÇÕES
 module.exports={
     getOne: getOne,
+    getAll: getAll,
 }

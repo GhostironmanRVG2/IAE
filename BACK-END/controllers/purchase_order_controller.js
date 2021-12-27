@@ -33,11 +33,10 @@ function insert(req,res){
       name: products[i].name,
       qty:  products[i].qty,
       price: products[i].price,
-      exemption_reason: products[i].exemption_reason,
-      taxes: {
+      taxes: [{
       tax_id: 2361047,
       value: 23.0
-      }
+      }]
 
       });
 
@@ -65,7 +64,11 @@ products.push({
   name:'Transporte km',
   exemption_reason: 'M09',
   qty: (x/1000),
-  price: 0.36,
+  price: 0.2926,
+  taxes: [{
+    tax_id: 2361047,
+    value: 23.0
+    }]
 });
 
     
