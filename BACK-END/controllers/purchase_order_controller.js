@@ -17,7 +17,6 @@ var options_geo = {
 function insert(req,res){
     //FUNCAO COM O CALLBACK
     credit(function(response){
-<<<<<<< HEAD
     //IR BUSCAR PARAMETROS AO BODY
     const morada_cliente=req.body.morada_cliente;
     const morada_moloni=req.body.morada_moloni;
@@ -41,7 +40,7 @@ function insert(req,res){
       }
 
       });
-      //ELIMINAR A POSICAO ANTERIOR
+
       products.splice(i,1);
       
     }
@@ -101,139 +100,6 @@ var request=http.request(options, function(response) {
     //ADICIONAR O CHUNK NA STRING
     k += chunk;
   });
-=======
-      //IR BUSCAR PARAMETROS AO BODY
-      const company_id = 205166; 
-      const date= req.body.date;
-      const expiration_date= req.body.expiration_date;
-      const products=req.body.products;
-     const supplier_id=req.body.supplier_id;
-
-     //DADOS
-     var post_data=  qs.stringify({
-        company_id:  company_id ,
-        date: date,
-        expiration_date : expiration_date,
-        document_set_id: 473163,
-        customer_id: 57185941,
-        status: 1,
-        products: products, 
-      });
-
-      //PASSAR OS ARGUMENTOS
-      var options ={
-        'method': 'POST',
-        'hostname': 'api.moloni.pt',
-        'path': '/v1/purchaseOrder/insert/?access_token='+response.access_token,
-        'headers': {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Length': post_data.length
-        },
-        'maxRedirects': 20,
-      };
-      //INVOCAR METODO HTTP
-      var k = '';
-      var request=http.request(options, function(response) {
-        //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
-        response.on('data', function (chunk) {
-          //ADICIONAR O CHUNK NA STRING
-          k += chunk;
-        });
-
-        response.on('end', function() {
-          //RESPOSTA NO FIM
-          var newparse=JSON.parse(k);
-          console.log(newparse);
-          //DADOS
-          //POST DATA
-          //TOTAL
-          var total=0;
-          for (let i = 0; i < products.length; i++) {
-            //TOTAL DE TUDO
-            total=total+(products[i].qty*products[i].price);
-          }
-    
-          var posted=  qs.stringify({
-            supplier_id: supplier_id,
-            date:date ,
-            expire_date:expiration_date ,
-            total: total,
-            document_id: newparse.document_id,
-          });
-          //OPCOES PARA ESTA LIGACAO
-          var options ={
-            'method': 'POST',
-            'hostname': '127.0.0.1',
-            'port': 4444,
-            'path': '/OrderPost',
-            'headers': {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'Content-Length': posted.length
-            },
-            'maxRedirects': 20,
-          };
-      
-          //INSERT ORDER
-          var insert_order=http.request(options,function(response){
-            let l='';
-            //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
-            response.on('data', function (chunk) {
-              //ADICIONAR O CHUNK NA STRING
-              l += chunk;
-            });
-            response.on('end', function() {
-              //RESPOSTA NO FIM
-              var inser_order_output=JSON.parse(l);
-            });
-          });
-          insert_order.write(posted);
-          insert_order.end();
-
-          var options_getid=new URL("http://localhost:4444/OrderIdGetByDocumentId/"+newparse.document_id);
-          var getid=http.request(options_getid,function(response){
-          let p='';
-          //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
-          response.on('data', function (chunk) {
-            //ADICIONAR O CHUNK NA STRING
-            p+= chunk;
-          });
-          response.on('end', function() {
-            //RESPOSTA NO FIM
-            var id_parse=JSON.parse(p);
-            //FAZER O POST DOS PRODUCTS
-            var posted_ordered=[];
-            for (let k = 0; k < products.length; k++) {
-              posted_ordered.push([id_parse[0].order_id,products[k].name,parseFloat(products[k].qty),parseFloat(products[k].price),products[k].qty*products[k].price]);
-            }
-            //SQL ARG
-            var sql = "INSERT INTO iae.ordered_product (order_id,description, quantity,unit_price,total) VALUES ?";      
-            //CONEXAO
-            query=connect.con.query(sql,[posted_ordered],function(err,rows,fields){
-              console.log(query.sql);
-              if(!err){
-                res.status(200).location(rows.insertedId).send(
-                {
-                  "msg": "Inserted with success"
-                }
-                );
-                console.log("Number of records inserted: "+rows.affectedRows);
-              }else{
-                if(err.code=="ER_DUP_ENTRY"){  
-                  res.status(409).send({"msg": err.code});
-                  console.log('Error while performing Query.', err);  
-                } else res.status(400).send({"msg": err.code});
-              }
-            });
-          });
-        });
-        getid.end();
-      })
-    });
-    request.write(post_data);
-    request.end();
-  })
-}
->>>>>>> 7873205aa4521c4a3134375540dff5a191683e61
 
   response.on('end', function() {
   //RESPOSTA NO FIM
@@ -255,7 +121,6 @@ expire_date:expiration_date ,
 total: total,
 document_id: newparse.document_id,
 
-<<<<<<< HEAD
   });
   //OPCOES PARA ESTA LIGACAO
   var options ={
@@ -277,17 +142,13 @@ document_id: newparse.document_id,
   response.on('data', function (chunk) {
     //ADICIONAR O CHUNK NA STRING
     l += chunk;
-=======
->>>>>>> 7873205aa4521c4a3134375540dff5a191683e61
 
+  });
 
-<<<<<<< HEAD
     response.on('end', function() {
       //RESPOSTA NO FIM
       var inser_order_output=JSON.parse(l);
   });
-=======
->>>>>>> 7873205aa4521c4a3134375540dff5a191683e61
 
   });
   insert_order.write(posted);
@@ -296,7 +157,6 @@ document_id: newparse.document_id,
 
 
 
-<<<<<<< HEAD
 
 
 var options_getid=new URL("http://localhost:4444/OrderIdGetByDocumentId/"+newparse.document_id);
@@ -350,52 +210,6 @@ console.log('Error while performing Query.', err);
 
 
 });
-=======
-function deleteOrder(req,res){
-  //FUNCAO COM O CALLBACK
-    const company_id = req.sanitize('company_id').escape();
-    const document_id = req.sanitize('document_id').espace();
-  //EXPLICITAR OS PARAMETROS
-  var params = {
-    company_id: company_id,
-    document_id: document_id,
-  };
-  //MOLONI DELETE
-  properties.moloni.purchaseOrder('delete',params, function(error, result){
-    //caso de erro, manda msg de erro
-    if (error){
-      //ENVIAR STATUS DE ERRO
-      res.status(400).send({
-        "msg": "Eroor, sometgin went wrong"
-      });
-      //PRINTAR NA CONSOLA ERRO
-      return console.error(error);
-    }else{
-      //CASO DE CERTO, PRINTAR ERRO EMANDAR O ERRO
-      console.log(result);
-      res.send(result);
-  
-      //criar e executar a query de leitura na BD
-      const order_id = req.sanitize('order_id').escape();
-      connect.con.query('DELETE iae.order where iae.order.order_id = ?', order_id, function (err, rows, fields) {
-        if (!err) {
-          //verifica os resultados se o número de linhas for 0 devolve dados não encontrados, caso contrário envia os resultados (rows).
-          if (rows.length == 0) {
-            res.status(404).send({
-              "msg": "data not found"
-            });
-          } else {
-            res.status(200).send({
-              "msg": "success"
-            });
-          }
-        } else
-          console.log('Error while performing Query.', err);
-      });
-    }
-  });
-}
->>>>>>> 7873205aa4521c4a3134375540dff5a191683e61
 
 });
 getid.end();
@@ -406,7 +220,6 @@ getid.end();
 
 
 
-<<<<<<< HEAD
 
 
 
@@ -438,8 +251,6 @@ request.end();
 
    
 }
-=======
->>>>>>> 7873205aa4521c4a3134375540dff5a191683e61
 
 
 function getDoc(req,res){
@@ -527,6 +338,5 @@ function getDoc(req,res){
 
 module.exports={
     insert: insert,
-    deleteOrder: deleteOrder,
     getDoc: getDoc,
 }
