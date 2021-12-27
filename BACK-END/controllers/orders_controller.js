@@ -196,7 +196,7 @@ function GetOrderId(req, res) {
 function DeleteOrderID(req, res) {
   //criar e executar a query de leitura na BD
   const order_id = req.sanitize('order_id').escape();
-  connect.con.query('DELETE from iaie.order, iaie.ordered_product where iaie.order.order_id = ?', order_id, function (err, rows, fields) {
+  connect.con.query('DELETE iae.order, iae.ordered_product from iae.order INNER JOIN iae.ordered_product ON iae.order.order_id = iae.ordered_product.order_id where iae.order.order_id = ?', order_id, function (err, rows, fields) {
       if (!err) {
           //verifica os resultados se o número de linhas for 0 devolve dados não encontrados, caso contrário envia os resultados (rows).
           if (rows.length == 0) {
@@ -216,7 +216,7 @@ function DeleteOrderID(req, res) {
 //FUNÇÃO PARA DEVOLVER OS VALORES DO ORDER E ORDERED_PRODUCT PELO order_id
 function OrderProductedByOrderID(req, res) {
   const order_id = req.sanitize('order_id').escape();
-  connect.con.query('SELECT iae.order.order_id, iae.ordered_product.description as designation_ordered_product, iae.ordered_product.order_id as order_id_ordered_product, iae.ordered_product.ordered_product_id as ordered_product_id_ordered_product, iae.ordered_product.quantity as quantity_ordered_product, iae.ordered_product.total as total_ordered_product, iae.ordered_product.unit_price as unit_price_ordered_product, iae.supplier.supplier_id as supplier_id, iae.supplier.designation as designation_supplier, iae.supplier.nif as nif_supplier, iae.supplier.morada as morada_supplier, iae.supplier.zip_code as zip_code_supplier, iae.supplier.district as district_supplier, iae.supplier.county as county_supplier FROM iae.ordered_product JOIN iae.order ON iae.ordered_product.order_id = iae.order.order_id JOIN iae.supplier ON iae.order.order_id = iae.supplier.supplier_id WHERE iae.order.order_id = ? group by iae.order.order_id', order_id, function(error, result) {
+  connect.con.query('SELECT iae.order.order_id as order_id, iae.ordered_product.description as designation_ordered_product, iae.ordered_product.order_id as order_id_ordered_product, iae.ordered_product.ordered_product_id as ordered_product_id_ordered_product, iae.ordered_product.quantity as quantity_ordered_product, iae.ordered_product.total as total_ordered_product, iae.ordered_product.unit_price as unit_price_ordered_product, iae.supplier.supplier_id as supplier_id, iae.supplier.designation as designation_supplier, iae.supplier.nif as nif_supplier, iae.supplier.morada as morada_supplier, iae.supplier.zip_code as zip_code_supplier, iae.supplier.district as district_supplier, iae.supplier.county as county_supplier FROM iae.order LEFT JOIN iae.supplier ON iae.order.supplier_id = iae.supplier.supplier_id LEFT JOIN iae.ordered_product ON iae.ordered_product.order_id = iae.order.order_id WHERE iae.order.order_id = ? group by iae.ordered_product.ordered_product_id', order_id, function(error, result) {
     //caso de erro ,manda msg de erro
     if (error){
       //ENVIAR STATUS DE ERRO
@@ -232,7 +232,6 @@ function OrderProductedByOrderID(req, res) {
     }
 });
 }
-
 module.exports = {
     read: read,
     GetOrderId: GetOrderId,

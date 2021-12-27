@@ -15,4 +15,5 @@ products[x][exemption_reason]
  */
 app.post("/InsertPurchaseOrder",purchase.insert);
 //FAZER UM GET POR
-app.get("/PurchaseOrderByDoc/:document_id",purchase.getDoc);
+app.get("/PurchaseOrderByDoc/:document_id",purchase.getDoc); 
+app.delete("/DeletePurchaseOrder/:company_id/:document_id/:order_id");
