@@ -20,6 +20,3 @@ app.delete('/OrderOrderedDeleteByOrderId/:order_id', orders.DeleteOrderID);
 //GET DOS VALORES DE SUPPLIER E ORDERED_RPODUCT, PRECISA DE: 
 //order_id
 app.get('/OrderProducedSuppliertByOrderID/:order_id', orders.OrderProductedByOrderID);
-//GET DOS VALORES DE ORDER E ORDERED_RPODUCT, PRECISA DE: 
-//order_id
-app.get('/OrderJoinOrderedByOrderID/:order_id', orders.OrderJOINOrderedByID);
