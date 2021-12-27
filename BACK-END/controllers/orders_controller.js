@@ -213,8 +213,46 @@ function DeleteOrderID(req, res) {
   });
 }
 
+//FUNÇÃO PARA DEVOLVER OS VALORES DO ORDER E ORDERED_PRODUCT PELO order_id
+function OrderProductedByOrderID(req, res) {
+  const order_id = req.sanitize('order_id').escape();
+  connect.con.query('SELECT iae.order.order_id, iae.ordered_product.description as designation_ordered_product, iae.ordered_product.order_id as order_id_ordered_product, iae.ordered_product.ordered_product_id as ordered_product_id_ordered_product, iae.ordered_product.quantity as quantity_ordered_product, iae.ordered_product.total as total_ordered_product, iae.ordered_product.unit_price as unit_price_ordered_product, iae.supplier.supplier_id as supplier_id, iae.supplier.designation as designation_supplier, iae.supplier.nif as nif_supplier, iae.supplier.morada as morada_supplier, iae.supplier.zip_code as zip_code_supplier, iae.supplier.district as district_supplier, iae.supplier.county as county_supplier FROM iae.ordered_product JOIN iae.order ON iae.ordered_product.order_id = iae.order.order_id JOIN iae.supplier ON iae.order.order_id = iae.supplier.supplier_id WHERE iae.order.order_id = ? group by iae.order.order_id', order_id, function(error, result) {
+    //caso de erro ,manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Error, something went wrong"
+    });
+    //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+    console.log(result);
+    res.send(result);
+    }
+});
+}
 
 
+//FUNÇÃO PARA DEVOLVER OS VALORES DO ORDER E ORDERED_PRODUCT COM O MESMO order_id
+function OrderJOINOrderedByID(req, res) {
+  const order_id = req.sanitize('order_id').escape();
+  connect.con.query('SELECT iae.order.order_id as order_id, iae.order.supplier_id as supplier_id_order, iae.order.date as date_order, iae.order.expire_date as expire_date_order, iae.order.total as total_order, iae.order.document_id as document_id_order, iae.ordered_product.description as designation_ordered_product, iae.ordered_product.order_id as order_id_ordered_product, iae.ordered_product.ordered_product_id as ordered_product_id_ordered_product, iae.ordered_product.quantity as quantity_ordered_product, iae.ordered_product.total as total_ordered_product, iae.ordered_product.unit_price as unit_price_ordered_product FROM iae.ordered_product JOIN iae.order ON iae.ordered_product.order_id = iae.order.order_id WHERE iae.order.order_id = ?', order_id, function(error, result) {
+    //caso de erro ,manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Error, something went wrong"
+    });
+    //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+    console.log(result);
+    res.send(result);
+    }
+});
+}
 
 module.exports = {
     read: read,
@@ -225,4 +263,6 @@ module.exports = {
     InsertOrdered: InsertOrdered,
     InsertOrderedArray:InsertOrderedArray,
     DeleteOrderID: DeleteOrderID,
+    OrderProductedByOrderID: OrderProductedByOrderID,
+    OrderJOINOrderedByID: OrderJOINOrderedByID,
 }
