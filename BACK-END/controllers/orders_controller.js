@@ -232,6 +232,32 @@ function OrderProductedByOrderID(req, res) {
     }
 });
 }
+
+
+
+//FUNÇÃO PARA DEVOLVER OS VALORES DO ORDER E SUPPLIER PELO order_id
+function OrderSupplierByOrderID(req, res) {
+  const order_id = req.sanitize('order_id').escape();
+  connect.con.query('SELECT iae.order.order_id as order_id, iae.order.date as date_order, iae.order.expire_date as expire_date_order, iae.order.total as total_order, iae.order.document_id as document_id_order, iae.supplier.supplier_id as supplier_id, iae.supplier.designation as designation_supplier, iae.supplier.nif as nif_supplier, iae.supplier.morada as morada_supplier, iae.supplier.zip_code as zip_code_supplier, iae.supplier.district as district_supplier, iae.supplier.county as county_supplier FROM iae.order LEFT JOIN iae.supplier ON iae.order.supplier_id = iae.supplier.supplier_id WHERE iae.order.order_id = ? group by iae.order.order_id', order_id, function(error, result) {
+    //caso de erro ,manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Error, something went wrong"
+    });
+    //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+    console.log(result);
+    res.send(result);
+    }
+});
+}
+
+
+
+
 module.exports = {
     read: read,
     GetOrderId: GetOrderId,
@@ -242,4 +268,5 @@ module.exports = {
     InsertOrderedArray:InsertOrderedArray,
     DeleteOrderID: DeleteOrderID,
     OrderProductedByOrderID: OrderProductedByOrderID,
+    OrderSupplierByOrderID: OrderSupplierByOrderID,
 }

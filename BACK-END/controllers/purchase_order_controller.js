@@ -334,6 +334,49 @@ function getDoc(req,res){
 
 
 
+function deleteOrder(req,res){
+  //FUNCAO COM O CALLBACK
+    const company_id = req.sanitize('company_id').escape();
+    const document_id = req.sanitize('document_id').espace();
+  //EXPLICITAR OS PARAMETROS
+  var params = {
+    company_id: company_id,
+    document_id: document_id,
+  };
+  //MOLONI DELETE
+  properties.moloni.purchaseOrder('delete', params, function(error, result){
+    //caso de erro, manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Eroor, sometgin went wrong"
+      });
+      //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+      //CASO DE CERTO, PRINTAR ERRO EMANDAR O ERRO
+      console.log(result);
+      res.send(result);
+  
+      //criar e executar a query de leitura na BD
+      connect.con.query('DELETE iae.order FROM iae.order where iae.order.document_id = ?', document_id, function (err, rows, fields) {
+        if (!err) {
+          //verifica os resultados se o número de linhas for 0 devolve dados não encontrados, caso contrário envia os resultados (rows).
+          if (rows.length == 0) {
+            res.status(404).send({
+              "msg": "data not found"
+            });
+          } else {
+            res.status(200).send({
+              "msg": "success"
+            });
+          }
+        } else
+          console.log('Error while performing Query.', err);
+      });
+    }
+  });
+}
 
 
 
@@ -342,4 +385,5 @@ function getDoc(req,res){
 module.exports={
     insert: insert,
     getDoc: getDoc,
+    deleteOrder: deleteOrder,
 }
