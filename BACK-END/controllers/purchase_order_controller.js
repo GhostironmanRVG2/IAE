@@ -44,7 +44,6 @@ function insert(req,res){
       
     }
 
-    console.log(products);
 //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
 //BUSCAR COORDENADAS GEO
 var geocoder = NodeGeocoder(options_geo);
@@ -84,6 +83,8 @@ products.push({
   products: products, 
 });
 
+console.log(post_data);
+
 //PASSAR OS ARGUMENTOS
 var options ={
   'method': 'POST',
@@ -103,6 +104,8 @@ var request=http.request(options, function(response) {
     //ADICIONAR O CHUNK NA STRING
     k += chunk;
   });
+
+  console.log(response);
 
   response.on('end', function() {
   //RESPOSTA NO FIM
@@ -175,6 +178,7 @@ p+= chunk;
 response.on('end', function() {
 //RESPOSTA NO FIM
 var id_parse=JSON.parse(p);
+
 //FAZER O POST DOS PRODUCTS
 var posted_ordered=[];
 for (let k = 0; k < products.length; k++) {
