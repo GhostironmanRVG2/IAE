@@ -41,7 +41,7 @@ function OrderProductByID(req, res) {
 
 //FUNÇÃO PARA DEVOLVER TODOS OS VALORES DO SUPPLIER
 function GetSuppliers(req, res) {
-  connect.con.query('SELECT iae.supplier.designation, iae.supplier.supplier_id FROM iae.supplier' , function(error, result){
+  connect.con.query('SELECT iae.supplier.designation, iae.supplier.supplier_id, iae.supplier.morada, iae.supplier.zip_code, iae.supplier.county, iae.supplier.district FROM iae.supplier' , function(error, result){
     //caso de erro ,manda msg de erro
       if (error){
         //ENVIAR STATUS DE ERRO
