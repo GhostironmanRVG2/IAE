@@ -26,28 +26,6 @@ function insert(req,res){
     const products=req.body.products;
     const supplier_id=req.body.supplier_id;
     const products_length=products.length;
-    for (let i = 0; i < products_length; i++) {
-      
-      products.push({
-      
-      product_id: products[i].product_id,  
-      name: products[i].name,
-      qty:  products[i].qty,
-      price: products[i].price,
-      taxes: [{
-      tax_id: 2361047,
-      value: 23.0
-      }]
-
-      });
-      
-      
-    }
-    console.log(products_length);
-    //DEPOIS DE CRIAR OS 2 OBJETOS NOVOS COM TAXAS FIXAS NOS ELIMINAMOS O NUMERO DE OBJETOS QUE TINHAMOS PRIMEIRO
-    products.splice(0,products_length);
-
-    console.log(products);
 //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
 //BUSCAR COORDENADAS GEO
 var geocoder = NodeGeocoder(options_geo);
@@ -56,17 +34,42 @@ var geocoder = NodeGeocoder(options_geo);
     geocoder.geocode(morada_cliente, function(err, response_morada_cliente) {
     
       geocoder.geocode(morada_moloni, function(err, response_morada_empresa){
-
-    var x=geolib.getDistance(
-        { latitude: response_morada_cliente[0].latitude, longitude: response_morada_cliente[0].longitude },
-        { latitude: response_morada_empresa[0].latitude, longitude: response_morada_empresa[0].longitude }
-    );
+        for (let i = 0; i < products_length; i++) {
+      
+          products.push({
+          
+          product_id: products[i].product_id,  
+          name: products[i].name,
+          qty:  products[i].qty,
+          price: products[i].price,
+          taxes: [{
+          tax_id: 2361047,
+          value: 23.0
+          }]
+    
+          });
+          
+          
+        }
+        //DEPOIS DE CRIAR OS 2 OBJETOS NOVOS COM TAXAS FIXAS NOS ELIMINAMOS O NUMERO DE OBJETOS QUE TINHAMOS PRIMEIRO
+    products.splice(0,products_length);
+    var options_km=new URL('https://maps.googleapis.com/maps/api/distancematrix/json?origins='+response_morada_cliente[0].latitude+' '+response_morada_cliente[0].longitude+'&destinations='+response_morada_empresa[0].latitude+' '+response_morada_empresa[0].longitude+'&key=AIzaSyAZ9ZOzUtovxO0cbG4OVHAWRO2hv_Ja07g');
+        var request_km=https.request(options_km, function(response_k) {
+          let response_km='';
+          //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+          response_k.on('data', function (chunk) {
+            //ADICIONAR O CHUNK NA STRING
+            response_km += chunk;
+          });
+        
+          response_k.on('end', function() {
+           var response_km_json=JSON.parse(response_km);
 //ADICIONAR ISTO AO ARRAY
 products.push({
   product_id:101381629,
   name:'Transporte km',
   exemption_reason: 'M09',
-  qty: (x/1000),
+  qty: (response_km_json.rows[0].elements[0].distance.value/1000),
   price: 0.2926,
   taxes: [{
     tax_id: 2361047,
@@ -74,10 +77,8 @@ products.push({
     }]
 });
 
-    
-
- //DADOS
- var post_data=  qs.stringify({
+//DADOS
+var post_data=  qs.stringify({
   company_id:  company_id ,
   date: date,
   expiration_date : expiration_date,
@@ -246,6 +247,14 @@ getid.end();
 });
 request.write(post_data);
 request.end();
+
+
+          }
+          )});
+          request_km.end();
+
+
+
 })
 
 
