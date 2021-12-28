@@ -22,4 +22,6 @@ app.delete('/OrderOrderedDeleteByOrderId/:order_id', orders.DeleteOrderID);
 app.get('/OrderProducedSuppliertByOrderID/:order_id', orders.OrderProductedByOrderID);
 //GET DE TODOS OS VALORES DE ORDER E SUPPLIER, PRECISA DE:
 //ORDER_ID
-app.get('/OrderSupplierByOrderId/:order_id', orders.OrderSupplierByOrderID);
+app.get('/OrderSupplierByOrderId/:order_id', orders.OrderSupplierByOrderID); 
+//GET DOS DADOS DE UM SUPPLIER PELO ID
+app.get('/SupplierGetById/:supplier_id', orders.SupplierByID);
