@@ -25,7 +25,29 @@ function insert(req,res){
     const expiration_date= req.body.expiration_date;
     const products=req.body.products;
     const supplier_id=req.body.supplier_id;
+<<<<<<< HEAD
     const products_length=products.length;
+=======
+    for (let i = 0; i < products.length; i++) {
+      
+      products.push({
+      
+      product_id: products[i].product_id,  
+      name: products[i].name,
+      qty:  products[i].qty,
+      price: products[i].price,
+      taxes: [{
+      tax_id: 2361047,
+      value: 23.0
+      }]
+
+      });
+
+      products.splice(i,1);
+      
+    }
+
+>>>>>>> dd9120a1255b109c7a7198c539398229fc2b3fe3
 //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
 //BUSCAR COORDENADAS GEO
 var geocoder = NodeGeocoder(options_geo);
@@ -88,6 +110,8 @@ var post_data=  qs.stringify({
   products: products, 
 });
 
+console.log(post_data);
+
 //PASSAR OS ARGUMENTOS
 var options ={
   'method': 'POST',
@@ -107,6 +131,8 @@ var request=http.request(options, function(response) {
     //ADICIONAR O CHUNK NA STRING
     k += chunk;
   });
+
+  console.log(response);
 
   response.on('end', function() {
   //RESPOSTA NO FIM
@@ -179,6 +205,7 @@ p+= chunk;
 response.on('end', function() {
 //RESPOSTA NO FIM
 var id_parse=JSON.parse(p);
+
 //FAZER O POST DOS PRODUCTS
 var posted_ordered=[];
 for (let k = 0; k < products.length; k++) {
