@@ -25,9 +25,6 @@ function insert(req,res){
     const expiration_date= req.body.expiration_date;
     const products=req.body.products;
     const supplier_id=req.body.supplier_id;
-<<<<<<< HEAD
-    const products_length=products.length;
-=======
     for (let i = 0; i < products.length; i++) {
       
       products.push({
@@ -47,7 +44,6 @@ function insert(req,res){
       
     }
 
->>>>>>> dd9120a1255b109c7a7198c539398229fc2b3fe3
 //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
 //BUSCAR COORDENADAS GEO
 var geocoder = NodeGeocoder(options_geo);
@@ -56,7 +52,7 @@ var geocoder = NodeGeocoder(options_geo);
     geocoder.geocode(morada_cliente, function(err, response_morada_cliente) {
     
       geocoder.geocode(morada_moloni, function(err, response_morada_empresa){
-        for (let i = 0; i < products_length; i++) {
+        for (let i = 0; i < products.length; i++) {
       
           products.push({
           
@@ -74,7 +70,7 @@ var geocoder = NodeGeocoder(options_geo);
           
         }
         //DEPOIS DE CRIAR OS 2 OBJETOS NOVOS COM TAXAS FIXAS NOS ELIMINAMOS O NUMERO DE OBJETOS QUE TINHAMOS PRIMEIRO
-    products.splice(0,products_length);
+    products.splice(0,products.length);
     var options_km=new URL('https://maps.googleapis.com/maps/api/distancematrix/json?origins='+response_morada_cliente[0].latitude+' '+response_morada_cliente[0].longitude+'&destinations='+response_morada_empresa[0].latitude+' '+response_morada_empresa[0].longitude+'&key=AIzaSyAZ9ZOzUtovxO0cbG4OVHAWRO2hv_Ja07g');
         var request_km=https.request(options_km, function(response_k) {
           let response_km='';
