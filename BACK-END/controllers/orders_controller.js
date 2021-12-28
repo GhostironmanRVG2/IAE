@@ -257,6 +257,29 @@ function OrderSupplierByOrderID(req, res) {
 
 
 
+//FUNÇÃO PARA DEVOLVER OS VALORES DO ORDER E ORDERED_PRODUCT COM O MESMO order_id
+function SupplierByID(req, res) {
+  const supplier_id = req.sanitize('supplier_id').escape();
+  connect.con.query('SELECT * FROM iae.supplier WHERE supplier_id = ?', supplier_id, function(error, result) {
+    //caso de erro ,manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Error, something went wrong"
+    });
+    //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+    console.log(result);
+    res.send(result);
+    }
+});
+}
+
+
+
+
 
 module.exports = {
     read: read,
@@ -269,4 +292,5 @@ module.exports = {
     DeleteOrderID: DeleteOrderID,
     OrderProductedByOrderID: OrderProductedByOrderID,
     OrderSupplierByOrderID: OrderSupplierByOrderID,
+    SupplierByID: SupplierByID,
 }
