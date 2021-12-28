@@ -25,7 +25,8 @@ function insert(req,res){
     const expiration_date= req.body.expiration_date;
     const products=req.body.products;
     const supplier_id=req.body.supplier_id;
-    for (let i = 0; i < products.length; i++) {
+    const products_length=products.length;
+    for (let i = 0; i < products_length; i++) {
       
       products.push({
       
@@ -39,10 +40,12 @@ function insert(req,res){
       }]
 
       });
-
-      products.splice(i,1);
+      
       
     }
+    console.log(products_length);
+    //DEPOIS DE CRIAR OS 2 OBJETOS NOVOS COM TAXAS FIXAS NOS ELIMINAMOS O NUMERO DE OBJETOS QUE TINHAMOS PRIMEIRO
+    products.splice(0,products_length);
 
     console.log(products);
 //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
