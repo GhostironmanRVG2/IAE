@@ -5,3 +5,4 @@ const customers=require('../controllers/customer_controller');
 //customer_id e associated_id
 //Tipo: Body
 properties.app.get("/customergetone/:associated_id",customers.getOne);
+properties.app.get("/customersgetall",customers.getAll);
