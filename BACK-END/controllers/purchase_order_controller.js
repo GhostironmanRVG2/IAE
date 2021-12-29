@@ -7,16 +7,17 @@ const connect = require('../config/connect');
 
 var options_geo = {
   provider: 'google',
-
   // Optionnal depending of the providers
   httpAdapter: 'https', // Default
   apiKey: 'AIzaSyAZ9ZOzUtovxO0cbG4OVHAWRO2hv_Ja07g', // for Mapquest, OpenCage, Google Premier
   formatter: null         // 'gpx', 'string', ...
 };
+
+
 //FUNCAO PARA INSERIR OS DADOS NO MOLONI
 function insert(req,res){
-    //FUNCAO COM O CALLBACK
-    credit(function(response){
+  //FUNCAO COM O CALLBACK
+  credit(function(response){
     //IR BUSCAR PARAMETROS AO BODY
     const morada_cliente=req.body.morada_cliente;
     const morada_moloni=req.body.morada_moloni;
@@ -26,34 +27,34 @@ function insert(req,res){
     const products=req.body.products;
     const supplier_id=req.body.supplier_id;
     const products_length=products.length;
+<<<<<<< HEAD
 //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
 //BUSCAR COORDENADAS GEO
 var geocoder = NodeGeocoder(options_geo);
+=======
+    //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
+    //BUSCAR COORDENADAS GEO
+    var geocoder = NodeGeocoder(options_geo);
+>>>>>>> 4cf3ff7e5e519cf8f3d9d480739ec163e1952c3e
 
     // Using callback
     geocoder.geocode(morada_cliente, function(err, response_morada_cliente) {
-    
       geocoder.geocode(morada_moloni, function(err, response_morada_empresa){
         for (let i = 0; i < products_length; i++) {
-      
           products.push({
-          
-          product_id: products[i].product_id,  
-          name: products[i].name,
-          qty:  products[i].qty,
-          price: products[i].price,
-          taxes: [{
-          tax_id: 2361047,
-          value: 23.0
-          }]
-    
+            product_id: products[i].product_id,  
+            name: products[i].name,
+            qty:  products[i].qty,
+            price: products[i].price,
+            taxes: [{
+              tax_id: 2361047,
+              value: 23.0
+            }]
           });
-          
-          
         }
         //DEPOIS DE CRIAR OS 2 OBJETOS NOVOS COM TAXAS FIXAS NOS ELIMINAMOS O NUMERO DE OBJETOS QUE TINHAMOS PRIMEIRO
-    products.splice(0,products_length);
-    var options_km=new URL('https://maps.googleapis.com/maps/api/distancematrix/json?origins='+response_morada_cliente[0].latitude+' '+response_morada_cliente[0].longitude+'&destinations='+response_morada_empresa[0].latitude+' '+response_morada_empresa[0].longitude+'&key=AIzaSyAZ9ZOzUtovxO0cbG4OVHAWRO2hv_Ja07g');
+        products.splice(0,products_length);
+        var options_km=new URL('https://maps.googleapis.com/maps/api/distancematrix/json?origins='+response_morada_cliente[0].latitude+' '+response_morada_cliente[0].longitude+'&destinations='+response_morada_empresa[0].latitude+' '+response_morada_empresa[0].longitude+'&key=AIzaSyAZ9ZOzUtovxO0cbG4OVHAWRO2hv_Ja07g');
         var request_km=https.request(options_km, function(response_k) {
           let response_km='';
           //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
@@ -61,252 +62,195 @@ var geocoder = NodeGeocoder(options_geo);
             //ADICIONAR O CHUNK NA STRING
             response_km += chunk;
           });
-        
           response_k.on('end', function() {
-           var response_km_json=JSON.parse(response_km);
-//ADICIONAR ISTO AO ARRAY
-products.push({
-  product_id:101381629,
-  name:'Transporte km',
-  exemption_reason: 'M09',
-  qty: (response_km_json.rows[0].elements[0].distance.value/1000),
-  price: 0.2926,
-  taxes: [{
-    tax_id: 2361047,
-    value: 23.0
-    }]
-});
+            var response_km_json=JSON.parse(response_km);
+            //ADICIONAR ISTO AO ARRAY
+            products.push({
+              product_id:101381629,
+              name:'Transporte km',
+              exemption_reason: 'M09',
+              qty: (response_km_json.rows[0].elements[0].distance.value/1000),
+              price: 0.2926,
+              taxes: [{
+                tax_id: 2361047,
+                value: 23.0
+              }]
+            });
 
-//DADOS
-var post_data=  qs.stringify({
-  company_id:  company_id ,
-  date: date,
-  expiration_date : expiration_date,
-  document_set_id: 473163,
-  customer_id: 57185941,
-  status: 1,
-  products: products, 
-});
+            //DADOS
+            var post_data=  qs.stringify({
+              company_id:  company_id ,
+              date: date,
+              expiration_date : expiration_date,
+              document_set_id: 473163,
+              customer_id: 57185941,
+              status: 1,
+              products: products, 
+            });
 
-console.log(post_data);
+            console.log(post_data);
 
-//PASSAR OS ARGUMENTOS
-var options ={
-  'method': 'POST',
-  'hostname': 'api.moloni.pt',
-  'path': '/v1/purchaseOrder/insert/?access_token='+response.access_token,
-  'headers': {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': post_data.length
-    },
-    'maxRedirects': 20,
-};
-//INVOCAR METODO HTTP
-var k = '';
-var request=http.request(options, function(response) {
-  //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
-  response.on('data', function (chunk) {
-    //ADICIONAR O CHUNK NA STRING
-    k += chunk;
-  });
+            //PASSAR OS ARGUMENTOS
+            var options ={
+              'method': 'POST',
+              'hostname': 'api.moloni.pt',
+              'path': '/v1/purchaseOrder/insert/?access_token='+response.access_token,
+              'headers': {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': post_data.length
+              },
+              'maxRedirects': 20,
+            };
 
-  console.log(response);
+            //INVOCAR METODO HTTP
+            var k = '';
+            var request=http.request(options, function(response) {
+              //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+              response.on('data', function (chunk) {
+                //ADICIONAR O CHUNK NA STRING
+                k += chunk;
+              });
+              console.log(response);
 
-  response.on('end', function() {
-  //RESPOSTA NO FIM
-  var newparse=JSON.parse(k);
-  console.log(newparse);
-  //DADOS
-  //POST DATA
-  //TOTAL
-var total=0;
-for (let i = 0; i < products.length; i++) {
-//TOTAL DE TUDO
-total=total+(products[i].qty*products[i].price);
-}
+              response.on('end', function() {
+                //RESPOSTA NO FIM
+                var newparse=JSON.parse(k);
+                console.log(newparse);
+                //DADOS
+                //POST DATA
+                //TOTAL
+                var total=0;
+                for (let i = 0; i < products.length; i++) {
+                  //TOTAL DE TUDO
+                  total=total+(products[i].qty*products[i].price);
+                }
 
-var posted=  qs.stringify({
-supplier_id: supplier_id,
-date:date ,
-expire_date:expiration_date ,
-total: total,
-document_id: newparse.document_id,
+                var posted=  qs.stringify({
+                  supplier_id: supplier_id,
+                  date:date ,
+                  expire_date:expiration_date ,
+                  total: total,
+                  document_id: newparse.document_id,
+                });
 
-  });
-  //OPCOES PARA ESTA LIGACAO
-  var options ={
-    'method': 'POST',
-    'hostname': '127.0.0.1',
-    'port': 4444,
-    'path': '/OrderPost',
-    'headers': {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': posted.length
-      },
-      'maxRedirects': 20,
-};
+                //OPCOES PARA ESTA LIGACAO
+                var options ={
+                  'method': 'POST',
+                  'hostname': '127.0.0.1',
+                  'port': 4444,
+                  'path': '/OrderPost',
+                  'headers': {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                      'Content-Length': posted.length
+                  },
+                  'maxRedirects': 20,
+                };
 
-  //INSERT ORDER
-  var insert_order=http.request(options,function(response){
-  let l='';
-   //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
-  response.on('data', function (chunk) {
-    //ADICIONAR O CHUNK NA STRING
-    l += chunk;
+                //INSERT ORDER
+                var insert_order=http.request(options,function(response){
+                  let l='';
+                  //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+                  response.on('data', function (chunk) {
+                    //ADICIONAR O CHUNK NA STRING
+                    l += chunk;
+                  });
 
-  });
+                  response.on('end', function() {
+                    //RESPOSTA NO FIM
+                    var inser_order_output=JSON.parse(l);
+                  });
+                });
+                insert_order.write(posted);
+                insert_order.end();
+                var options_getid=new URL("http://localhost:4444/OrderIdGetByDocumentId/"+newparse.document_id);
+                var getid=http.request(options_getid,function(response){
+                  let p='';
+                  //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+                  response.on('data', function (chunk) {
+                    //ADICIONAR O CHUNK NA STRING
+                    p+= chunk;
+                  });
 
-    response.on('end', function() {
-      //RESPOSTA NO FIM
-      var inser_order_output=JSON.parse(l);
-  });
+                  response.on('end', function() {
+                    //RESPOSTA NO FIM
+                    var id_parse=JSON.parse(p);
 
-  });
-  insert_order.write(posted);
-  insert_order.end();
-
-
-
-
-
-
-var options_getid=new URL("http://localhost:4444/OrderIdGetByDocumentId/"+newparse.document_id);
-var getid=http.request(options_getid,function(response){
-let p='';
-//RECEBER OS DADOS E ENVIAR PARA A CALLBACK
-response.on('data', function (chunk) {
-//ADICIONAR O CHUNK NA STRING
-p+= chunk;
-
-});
-
-response.on('end', function() {
-//RESPOSTA NO FIM
-var id_parse=JSON.parse(p);
-
-//FAZER O POST DOS PRODUCTS
-var posted_ordered=[];
-for (let k = 0; k < products.length; k++) {
-  posted_ordered.push([id_parse[0].order_id,products[k].name,parseFloat(products[k].qty),parseFloat(products[k].price),products[k].qty*products[k].price]);
-}
-//SQL ARG
-var sql = "INSERT INTO iae.ordered_product (order_id,description, quantity,unit_price,total) VALUES ?";      
-//CONEXAO
-query=connect.con.query(sql,[posted_ordered],function(err,rows,fields){
-console.log(query.sql);
-if(!err){
-res.status(200).location(rows.insertedId).send(
-{
-  "msg": "Inserted with success"
-}
-);
-console.log("Number of records inserted: "+rows.affectedRows);
-}else{
-
-
-if(err.code=="ER_DUP_ENTRY"){
-
-res.status(409).send({"msg": err.code});
-console.log('Error while performing Query.', err);
-
-
-} else res.status(400).send({"msg": err.code});
-
-
-}
-
-});
-
-
-
-
-
-});
-
-});
-getid.end();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  })
-
-});
-request.write(post_data);
-request.end();
-
-
+                    //FAZER O POST DOS PRODUCTS
+                    var posted_ordered=[];
+                    for (let k = 0; k < products.length; k++) {
+                      posted_ordered.push([id_parse[0].order_id,products[k].name,parseFloat(products[k].qty),parseFloat(products[k].price),products[k].qty*products[k].price]);
+                    }
+                    //SQL ARG
+                    var sql = "INSERT INTO iae.ordered_product (order_id,description, quantity,unit_price,total) VALUES ?";      
+                    //CONEXAO
+                    query=connect.con.query(sql,[posted_ordered],function(err,rows,fields){
+                      console.log(query.sql);
+                      if(!err){
+                        res.status(200).location(rows.insertedId).send(
+                        {
+                          "msg": "Inserted with success"
+                        });
+                        console.log("Number of records inserted: "+rows.affectedRows);
+                      }else{
+                        if(err.code=="ER_DUP_ENTRY"){
+                          res.status(409).send({"msg": err.code});
+                          console.log('Error while performing Query.', err);
+                        } else res.status(400).send({"msg": err.code});
+                      }
+                    });
+                  });
+                });
+                getid.end();
+              })
+            });
+            request.write(post_data);
+            request.end();
           }
-          )});
-          request_km.end();
-
-
-
-})
-
-
-
-
-
-      });
+        )});
+        request_km.end();     
+      })
     });
-
-   
+  });
 }
+
+
+
 
 
 function getDoc(req,res){
-    //FUNCAO COM O CALLBACK
-    credit(function(response){
-        const document_id = req.sanitize('document_id').escape();
+  //FUNCAO COM O CALLBACK
+  credit(function(response){
+    const document_id = req.sanitize('document_id').escape();
     //DADOS
     var post_data=  qs.stringify({
-        company_id:  205166 ,
+      company_id:  205166 ,
     });
 
     //PASSAR OS ARGUMENTOS
     var options ={
-        'method': 'POST',
-        'hostname': 'api.moloni.pt',
-        'path': '/v1/purchaseOrder/getAll/?access_token='+response.access_token,
-        'headers': {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': post_data.length,
-            "Accept-Charset":"utf-8"
-          },
-          'maxRedirects': 20,
-          'transfer-encoding': ''
+      'method': 'POST',
+      'hostname': 'api.moloni.pt',
+      'path': '/v1/purchaseOrder/getAll/?access_token='+response.access_token,
+      'headers': {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': post_data.length,
+        "Accept-Charset":"utf-8"
+      },
+      'maxRedirects': 20,
+      'transfer-encoding': ''
     };
     
     //INVOCAR METODO HTTP
     var request=http.request(options, function(response) {
-        var k='';
-        //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
-        response.on('data', function (chunk) {
-           k+=chunk;
-        });
+      var k='';
+      //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+      response.on('data', function (chunk) {
+        k+=chunk;
+      });
          
-        response.on('end', function() {
+      response.on('end', function() {
         //PEGAR NOS DADOS E PASSAR PARA JSON
-       var dt = JSON.parse(k);
+        var dt = JSON.parse(k);
         //CRIAR VARIAVEL OUTPUT
         var output=[];
         //FAZER UM FOR PARA CORRER O DT
@@ -314,96 +258,225 @@ function getDoc(req,res){
           console.log(dt[i].document_id);
           //CASO OS IDS SEJAM IGUAIS INSERIR OBJETO DENTRO DO OUTPUT  
           if(document_id==(dt[i].document_id)){
-          //COLOCA A VARIAVEL DENTRO DO ARRAY
-          output.push(dt[i]);
-          }
-            
+            //COLOCA A VARIAVEL DENTRO DO ARRAY
+            output.push(dt[i]);
+          }   
         }
         //SE O OUTPUT FOR DIFERENTE DE 0
         if(output.length!=0){
-       //MANDAR MSG AO PSEUDO ENGENHEIRO DA FRONT END
-        try{
-        //ENVIAR OUTPUT E SETAR STATUS PARA ACOMPLISH
-        res.status(200);
-        res.send(output);
-        }catch(Exception){}
-      }else{
-      try{
-    //ENVIAR MSG DE ERRO E SETAR STATUS PARA 400
-      var empty=[{"msg":"Theres no document ids that match yours","cod":400}];
-      res.status(400);
-      res.send(empty);
-      }catch(Exception){}
-      }
-      
-
-        });
-
-        
+          //MANDAR MSG AO PSEUDO ENGENHEIRO DA FRONT END
+          try{
+            //ENVIAR OUTPUT E SETAR STATUS PARA ACOMPLISH
+            res.status(200);
+            res.send(output);
+          }catch(Exception){}
+        }else{
+          try{
+            //ENVIAR MSG DE ERRO E SETAR STATUS PARA 400
+            var empty=[{"msg":"Theres no document ids that match yours","cod":400}];
+            res.status(400);
+            res.send(empty);
+          }catch(Exception){}
+        }
+      });
     });
     
     request.write(post_data)
     request.end();
+  })
+}
+
+
+
+
+
+function DelOrder(req,res){
+  credit(function(response){
+    const document_id = req.sanitize('document_id').escape();
+    //DADOS
+    var post_data=  qs.stringify({
+      company_id:  205166 ,
+    });
+
+    //PASSAR OS ARGUMENTOS
+    var options ={
+      'method': 'POST',
+      'hostname': 'api.moloni.pt',
+      'path': '/v1/purchaseOrder/delete/?access_token='+response.access_token,
+      'headers': {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': post_data.length,
+        "Accept-Charset":"utf-8"
+      },
+      'maxRedirects': 20,
+      'transfer-encoding': ''
+    };
     
-
-    })
+    //INVOCAR METODO HTTP
+    var request=http.request(options, function(response) {
+      var k='';
+      //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+      response.on('data', function (chunk) {
+        k+=chunk;
+      });
+         
+      response.on('end', function() {
+        //PEGAR NOS DADOS E PASSAR PARA JSON
+        var dt = JSON.parse(k);
+        //CRIAR VARIAVEL OUTPUT
+        var output=[];
+        //FAZER UM FOR PARA CORRER O DT
+        for (let i = 0; i < dt.length; i++) {
+          console.log(dt[i].document_id);
+          //CASO OS IDS SEJAM IGUAIS INSERIR OBJETO DENTRO DO OUTPUT  
+          if(document_id==(dt[i].document_id)){
+            //COLOCA A VARIAVEL DENTRO DO ARRAY
+            output.push(dt[i]);
+          }   
+        }
+        //SE O OUTPUT FOR DIFERENTE DE 0
+        if(output.length!=0){
+          //MANDAR MSG AO PSEUDO ENGENHEIRO DA FRONT END
+          try{
+            //ENVIAR OUTPUT E SETAR STATUS PARA ACOMPLISH
+            res.status(200);
+            res.send(output);
+          }catch(Exception){}
+        }else{
+          try{
+            //ENVIAR MSG DE ERRO E SETAR STATUS PARA 400
+            var empty=[{"msg":"Theres no document ids that match yours","cod":400}];
+            res.status(400);
+            res.send(empty);
+          }catch(Exception){}
+        }
+      });
+    });
+    
+    request.write(post_data)
+    request.end();
+  })
 }
 
 
 
-function deleteOrder(req,res){
+
+
+function DelOrderDocument(req, res) {
   //FUNCAO COM O CALLBACK
-    const company_id = req.sanitize('company_id').escape();
-    const document_id = req.sanitize('document_id').espace();
-  //EXPLICITAR OS PARAMETROS
-  var params = {
-    company_id: company_id,
-    document_id: document_id,
-  };
-  //MOLONI DELETE
-  properties.moloni.purchaseOrder('delete', params, function(error, result){
-    //caso de erro, manda msg de erro
-    if (error){
-      //ENVIAR STATUS DE ERRO
-      res.status(400).send({
-        "msg": "Eroor, sometgin went wrong"
-      });
-      //PRINTAR NA CONSOLA ERRO
-      return console.error(error);
-    }else{
-      //CASO DE CERTO, PRINTAR ERRO EMANDAR O ERRO
-      console.log(result);
-      res.send(result);
-  
-      //criar e executar a query de leitura na BD
-      connect.con.query('DELETE iae.order FROM iae.order where iae.order.document_id = ?', document_id, function (err, rows, fields) {
-        if (!err) {
-          //verifica os resultados se o número de linhas for 0 devolve dados não encontrados, caso contrário envia os resultados (rows).
-          if (rows.length == 0) {
-            res.status(404).send({
-              "msg": "data not found"
-            });
-          } else {
-            res.status(200).send({
-              "msg": "success"
-            });
-          }
-        } else
-          console.log('Error while performing Query.', err);
-      });
-    }
-  });
+  const document_id = req.sanitize('document_id').escape();
+  //criar e executar a query de leitura na BD
+  connect.con.query('DELETE iae.order, iae.ordered_product FROM iae.order JOIN iae.ordered_product ON iae.order.order_id = iae.ordered_product.order_id WHERE iae.order.document_id = ?', document_id, function (err, rows, fields) {
+    if (!err) {
+      //verifica os resultados se o número de linhas for 0 devolve dados não encontrados, caso contrário envia os resultados (rows).
+      if (rows.length == 0) {
+        res.status(404).send({
+          "msg": "data not found"
+        });
+      } else {
+        res.status(200).send({
+          "msg": "success"
+        });
+      }
+    } else
+      console.log('Error while performing Query.', err);
+  }); 
 }
 
 
 
-function obliterate(req,res){
-
-  const document_id = req.sanitize('document_id').escape();
-  const company_id = req.sanitize('company_id').escape();
-  console.log(document_id+'  '+company_id);
 
 
+function DoubleDelOrder(req,res){
+  credit(function(response){
+    const document_id = req.sanitize('document_id').escape();
+    //DADOS
+    var post_data=  qs.stringify({
+      company_id:  205166 ,
+    });
+
+    //PASSAR OS ARGUMENTOS
+    var options ={
+      'method': 'POST',
+      'hostname': 'api.moloni.pt',
+      'path': '/v1/purchaseOrder/delete/?access_token='+response.access_token,
+      'headers': {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': post_data.length,
+        "Accept-Charset":"utf-8"
+      },
+      'maxRedirects': 20,
+      'transfer-encoding': ''
+    };
+    
+    //INVOCAR METODO HTTP
+    var request=http.request(options, function(response) {
+      var k='';
+      //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+      response.on('data', function (chunk) {
+        k+=chunk;
+      });
+         
+      response.on('end', function() {
+        //PEGAR NOS DADOS E PASSAR PARA JSON
+        var dt = JSON.parse(k);
+        //CRIAR VARIAVEL OUTPUT
+        var output=[];
+        //FAZER UM FOR PARA CORRER O DT
+        for (let i = 0; i < dt.length; i++) {
+          console.log(dt[i].document_id);
+          //CASO OS IDS SEJAM IGUAIS INSERIR OBJETO DENTRO DO OUTPUT  
+          if(document_id==(dt[i].document_id)){
+            //COLOCA A VARIAVEL DENTRO DO ARRAY
+            output.push(dt[i]);
+          }   
+        }
+        //SE O OUTPUT FOR DIFERENTE DE 0
+        if(output.length!=0){
+          //MANDAR MSG AO PSEUDO ENGENHEIRO DA FRONT END
+          try{
+            //ENVIAR OUTPUT E SETAR STATUS PARA ACOMPLISH
+            res.status(200);
+            
+
+
+            //FUNCAO COM O CALLBACK
+            const document_id = req.sanitize('document_id').escape();
+            //criar e executar a query de leitura na BD
+            connect.con.query('DELETE iae.order, iae.ordered_product FROM iae.order JOIN iae.ordered_product ON iae.order.order_id = iae.ordered_product.order_id WHERE iae.order.document_id = ?', document_id, function (err, rows, fields) {
+              if (!err) {
+                //verifica os resultados se o número de linhas for 0 devolve dados não encontrados, caso contrário envia os resultados (rows).
+                if (rows.length == 0) {
+                  res.status(404).send({
+                    "msg": "data not found"
+                  });
+                } else {
+                  res.status(200).send({
+                    "msg": "success"
+                  });
+                }
+              } else
+                console.log('Error while performing Query.', err);
+            }); 
+
+
+
+            res.send(output);
+          }catch(Exception){}
+        }else{
+          try{
+            //ENVIAR MSG DE ERRO E SETAR STATUS PARA 400
+            var empty=[{"msg":"Theres no document ids that match yours","cod":400}];
+            res.status(400);
+            res.send(empty);
+          }catch(Exception){}
+        }
+      });
+    });
+    
+    request.write(post_data)
+    request.end();
+  })
 }
 
 
@@ -411,8 +484,9 @@ function obliterate(req,res){
 
 
 module.exports={
-    insert: insert,
-    getDoc: getDoc,
-    deleteOrder: deleteOrder,
-    obliterate: obliterate
+  insert: insert,
+  getDoc: getDoc,
+  DoubleDelOrder: DoubleDelOrder,
+  DelOrder: DelOrder,
+  DelOrderDocument: DelOrderDocument,
 }
