@@ -210,6 +210,7 @@ function insert(req,res){
 
 
 
+
 function getDoc(req,res){
   //FUNCAO COM O CALLBACK
   credit(function(response){
@@ -281,54 +282,205 @@ function getDoc(req,res){
 
 
 
-function deleteOrder(req,res){
-  //FUNCAO COM O CALLBACK
-  const document_id = req.sanitize('document_id').escape();
-  const company_id = req.sanitize('company_id').escape();
-  //EXPLICITAR OS PARAMETROS
-  var params = {
-    company_id: company_id,
-    document_id: document_id,
-  };
-  //MOLONI DELETE
-  properties.moloni.purchaseOrder('delete', params, function(error, result){
-    //caso de erro, manda msg de erro
-    if (error){
-      //ENVIAR STATUS DE ERRO
-      res.status(400).send({
-        "msg": "Eroor, sometgin went wrong"
+
+
+function DelOrder(req,res){
+  credit(function(response){
+    const document_id = req.sanitize('document_id').escape();
+    //DADOS
+    var post_data=  qs.stringify({
+      company_id:  205166 ,
+    });
+
+    //PASSAR OS ARGUMENTOS
+    var options ={
+      'method': 'POST',
+      'hostname': 'api.moloni.pt',
+      'path': '/v1/purchaseOrder/delete/?access_token='+response.access_token,
+      'headers': {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': post_data.length,
+        "Accept-Charset":"utf-8"
+      },
+      'maxRedirects': 20,
+      'transfer-encoding': ''
+    };
+    
+    //INVOCAR METODO HTTP
+    var request=http.request(options, function(response) {
+      var k='';
+      //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+      response.on('data', function (chunk) {
+        k+=chunk;
       });
-      //PRINTAR NA CONSOLA ERRO
-      return console.error(error);
-    }else{
-      //CASO DE CERTO, PRINTAR ERRO EMANDAR O ERRO
-      console.log(result);
-  
-      //criar e executar a query de leitura na BD
-      connect.con.query('DELETE iae.order FROM iae.order where iae.order.document_id = ?', document_id, function (err, rows, fields) {
-        if (!err) {
-          //verifica os resultados se o número de linhas for 0 devolve dados não encontrados, caso contrário envia os resultados (rows).
-          if (rows.length == 0) {
-            res.status(404).send({
-              "msg": "data not found"
-            });
-          } else {
-            res.status(200).send({
-              "msg": "success"
-            });
-            res.send(result);
-          }
-        } else
-          console.log('Error while performing Query.', err);
+         
+      response.on('end', function() {
+        //PEGAR NOS DADOS E PASSAR PARA JSON
+        var dt = JSON.parse(k);
+        //CRIAR VARIAVEL OUTPUT
+        var output=[];
+        //FAZER UM FOR PARA CORRER O DT
+        for (let i = 0; i < dt.length; i++) {
+          console.log(dt[i].document_id);
+          //CASO OS IDS SEJAM IGUAIS INSERIR OBJETO DENTRO DO OUTPUT  
+          if(document_id==(dt[i].document_id)){
+            //COLOCA A VARIAVEL DENTRO DO ARRAY
+            output.push(dt[i]);
+          }   
+        }
+        //SE O OUTPUT FOR DIFERENTE DE 0
+        if(output.length!=0){
+          //MANDAR MSG AO PSEUDO ENGENHEIRO DA FRONT END
+          try{
+            //ENVIAR OUTPUT E SETAR STATUS PARA ACOMPLISH
+            res.status(200);
+            res.send(output);
+          }catch(Exception){}
+        }else{
+          try{
+            //ENVIAR MSG DE ERRO E SETAR STATUS PARA 400
+            var empty=[{"msg":"Theres no document ids that match yours","cod":400}];
+            res.status(400);
+            res.send(empty);
+          }catch(Exception){}
+        }
       });
-    }
-  });
+    });
+    
+    request.write(post_data)
+    request.end();
+  })
 }
 
 
 
+
+
+function DelOrderDocument(req, res) {
+  //FUNCAO COM O CALLBACK
+  const document_id = req.sanitize('document_id').escape();
+  //criar e executar a query de leitura na BD
+  connect.con.query('DELETE iae.order, iae.ordered_product FROM iae.order JOIN iae.ordered_product ON iae.order.order_id = iae.ordered_product.order_id WHERE iae.order.document_id = ?', document_id, function (err, rows, fields) {
+    if (!err) {
+      //verifica os resultados se o número de linhas for 0 devolve dados não encontrados, caso contrário envia os resultados (rows).
+      if (rows.length == 0) {
+        res.status(404).send({
+          "msg": "data not found"
+        });
+      } else {
+        res.status(200).send({
+          "msg": "success"
+        });
+      }
+    } else
+      console.log('Error while performing Query.', err);
+  }); 
+}
+
+
+
+
+
+function DoubleDelOrder(req,res){
+  credit(function(response){
+    const document_id = req.sanitize('document_id').escape();
+    //DADOS
+    var post_data=  qs.stringify({
+      company_id:  205166 ,
+    });
+
+    //PASSAR OS ARGUMENTOS
+    var options ={
+      'method': 'POST',
+      'hostname': 'api.moloni.pt',
+      'path': '/v1/purchaseOrder/delete/?access_token='+response.access_token,
+      'headers': {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': post_data.length,
+        "Accept-Charset":"utf-8"
+      },
+      'maxRedirects': 20,
+      'transfer-encoding': ''
+    };
+    
+    //INVOCAR METODO HTTP
+    var request=http.request(options, function(response) {
+      var k='';
+      //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+      response.on('data', function (chunk) {
+        k+=chunk;
+      });
+         
+      response.on('end', function() {
+        //PEGAR NOS DADOS E PASSAR PARA JSON
+        var dt = JSON.parse(k);
+        //CRIAR VARIAVEL OUTPUT
+        var output=[];
+        //FAZER UM FOR PARA CORRER O DT
+        for (let i = 0; i < dt.length; i++) {
+          console.log(dt[i].document_id);
+          //CASO OS IDS SEJAM IGUAIS INSERIR OBJETO DENTRO DO OUTPUT  
+          if(document_id==(dt[i].document_id)){
+            //COLOCA A VARIAVEL DENTRO DO ARRAY
+            output.push(dt[i]);
+          }   
+        }
+        //SE O OUTPUT FOR DIFERENTE DE 0
+        if(output.length!=0){
+          //MANDAR MSG AO PSEUDO ENGENHEIRO DA FRONT END
+          try{
+            //ENVIAR OUTPUT E SETAR STATUS PARA ACOMPLISH
+            res.status(200);
+            
+
+
+            //FUNCAO COM O CALLBACK
+            const document_id = req.sanitize('document_id').escape();
+            //criar e executar a query de leitura na BD
+            connect.con.query('DELETE iae.order, iae.ordered_product FROM iae.order JOIN iae.ordered_product ON iae.order.order_id = iae.ordered_product.order_id WHERE iae.order.document_id = ?', document_id, function (err, rows, fields) {
+              if (!err) {
+                //verifica os resultados se o número de linhas for 0 devolve dados não encontrados, caso contrário envia os resultados (rows).
+                if (rows.length == 0) {
+                  res.status(404).send({
+                    "msg": "data not found"
+                  });
+                } else {
+                  res.status(200).send({
+                    "msg": "success"
+                  });
+                }
+              } else
+                console.log('Error while performing Query.', err);
+            }); 
+
+
+
+            res.send(output);
+          }catch(Exception){}
+        }else{
+          try{
+            //ENVIAR MSG DE ERRO E SETAR STATUS PARA 400
+            var empty=[{"msg":"Theres no document ids that match yours","cod":400}];
+            res.status(400);
+            res.send(empty);
+          }catch(Exception){}
+        }
+      });
+    });
+    
+    request.write(post_data)
+    request.end();
+  })
+}
+
+
+
+
+
 module.exports={
-    insert: insert,
-    getDoc: getDoc,
-    deleteOrder: deleteOrder,
+  insert: insert,
+  getDoc: getDoc,
+  DoubleDelOrder: DoubleDelOrder,
+  DelOrder: DelOrder,
+  DelOrderDocument: DelOrderDocument,
 }

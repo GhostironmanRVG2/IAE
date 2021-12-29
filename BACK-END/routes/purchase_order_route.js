@@ -15,5 +15,7 @@ products[x][exemption_reason]
  */
 app.post("/InsertPurchaseOrder",purchase.insert);
 //FAZER UM GET POR
-app.get("/PurchaseOrderByDoc/:document_id",purchase.getDoc); 
-app.delete("/DeletePurchaseOrder/:company_id/:document_id",purchase.deleteOrder);
+app.get("/PurchaseOrderByDoc/:document_id",purchase.getDoc);  
+app.delete("/DeletePurchaseOrder/:document_id",purchase.DoubleDelOrder);
+app.delete("/MoloniDelete/:document_id",purchase.DelOrder);
+app.delete("/DBDelete/:document_id",purchase.DelOrderDocument);
