@@ -25,29 +25,7 @@ function insert(req,res){
     const expiration_date= req.body.expiration_date;
     const products=req.body.products;
     const supplier_id=req.body.supplier_id;
-<<<<<<< HEAD
     const products_length=products.length;
-=======
-    for (let i = 0; i < products.length; i++) {
-      
-      products.push({
-      
-      product_id: products[i].product_id,  
-      name: products[i].name,
-      qty:  products[i].qty,
-      price: products[i].price,
-      taxes: [{
-      tax_id: 2361047,
-      value: 23.0
-      }]
-
-      });
-
-      products.splice(i,1);
-      
-    }
-
->>>>>>> dd9120a1255b109c7a7198c539398229fc2b3fe3
 //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
 //BUSCAR COORDENADAS GEO
 var geocoder = NodeGeocoder(options_geo);
@@ -419,10 +397,22 @@ function deleteOrder(req,res){
 
 
 
+function obliterate(req,res){
+
+  const document_id = req.sanitize('document_id').escape();
+  const company_id = req.sanitize('company_id').escape();
+  console.log(document_id+'  '+company_id);
+
+
+}
+
+
+
 
 
 module.exports={
     insert: insert,
     getDoc: getDoc,
     deleteOrder: deleteOrder,
+    obliterate: obliterate
 }
