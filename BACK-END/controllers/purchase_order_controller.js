@@ -25,31 +25,7 @@ function insert(req,res){
     const expiration_date= req.body.expiration_date;
     const products=req.body.products;
     const supplier_id=req.body.supplier_id;
-<<<<<<< HEAD
     const products_length=products.length;
-=======
-    for (let i = 0; i < products.length; i++) {
-      
-      products.push({
-      
-      product_id: products[i].product_id,  
-      name: products[i].name,
-      qty:  products[i].qty,
-      price: products[i].price,
-      taxes: [{
-      tax_id: 2361047,
-      value: 23.0
-      }]
-
-      });
-
-      products.splice(i,1);
-      
-    }
-
-    const products_length = products.length;
-
->>>>>>> 2924839b9bb4a4584f92eb5413c5cbe6b8602cc0
 //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
 //BUSCAR COORDENADAS GEO
 var geocoder = NodeGeocoder(options_geo);
