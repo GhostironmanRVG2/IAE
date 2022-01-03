@@ -42,7 +42,7 @@ var geocoder = NodeGeocoder(options_geo);
             qty:  products[i].qty,
             price: products[i].price,
             taxes: [{
-              tax_id: 2361047,
+              tax_id: 2384598,
               value: 23.0
             }]
           });
@@ -61,12 +61,12 @@ var geocoder = NodeGeocoder(options_geo);
             var response_km_json=JSON.parse(response_km);
             //ADICIONAR ISTO AO ARRAY
             products.push({
-              product_id:101381629,
+              product_id:103603259,
               name:'Transporte km',
               qty: (response_km_json.rows[0].elements[0].distance.value/1000),
               price: 0.2926,
               taxes: [{
-                tax_id: 2361047,
+                tax_id: 2384598,
                 value: 23.0
               }]
             });
@@ -76,8 +76,13 @@ var geocoder = NodeGeocoder(options_geo);
               company_id:  company_id ,
               date: date,
               expiration_date : expiration_date,
+<<<<<<< HEAD
               document_set_id: 473163,
               customer_id: 58637341,
+=======
+              document_set_id: 485783,
+              customer_id: 57185941,
+>>>>>>> 7404a944dbe0d1782e2c4289fd8d23b6ac3aa39a
               status: 1,
               products: products, 
             });
