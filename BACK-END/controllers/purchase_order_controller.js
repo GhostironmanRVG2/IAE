@@ -5,6 +5,7 @@ const {credit,http}=require('../authtoken/molonitoken');
 const https=require('https');
 const connect = require('../config/connect');
 const { post } = require('request');
+const { response } = require('express');
 
 var options_geo = {
   provider: 'google',
@@ -291,16 +292,21 @@ const date=req.sanitize('date').escape();
 const expiration_date=req.sanitize('expiration_date').escape();
 const products=req.body.products;
 const status=req.sanitize('status').escape();
+const document_id=req.sanitize('document_id').escape();
+const company_id=209537;
+const document_set_id=485783;
+const customer_id=58637341;
 
    //DADOS A INSERIR
     var post_data=  qs.stringify({
-      company_id:  209537 ,
       date: date,
       expiration_date: expiration_date,
-      document_set_id: 473163,
-      customer_id: 58637341,
+      status: status,
       products: products,
-      status: status
+      document_id: document_id,
+      company_id: company_id,
+      document_set_id: document_set_id,
+      customer_id: customer_id
     });
 //CRIAR OPCOES DE LIGACAO DO HTTP REQUEST
 var options_update ={
