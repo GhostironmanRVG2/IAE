@@ -76,13 +76,8 @@ var geocoder = NodeGeocoder(options_geo);
               company_id:  company_id ,
               date: date,
               expiration_date : expiration_date,
-<<<<<<< HEAD
-              document_set_id: 473163,
-              customer_id: 58637341,
-=======
               document_set_id: 485783,
-              customer_id: 57185941,
->>>>>>> 7404a944dbe0d1782e2c4289fd8d23b6ac3aa39a
+              customer_id: 58637341,
               status: 1,
               products: products, 
             });
