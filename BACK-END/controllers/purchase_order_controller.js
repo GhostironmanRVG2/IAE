@@ -27,15 +27,9 @@ function insert(req,res){
     const products=req.body.products;
     const supplier_id=req.body.supplier_id;
     const products_length=products.length;
-<<<<<<< HEAD
 //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
 //BUSCAR COORDENADAS GEO
 var geocoder = NodeGeocoder(options_geo);
-=======
-    //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
-    //BUSCAR COORDENADAS GEO
-    var geocoder = NodeGeocoder(options_geo);
->>>>>>> 4cf3ff7e5e519cf8f3d9d480739ec163e1952c3e
 
     // Using callback
     geocoder.geocode(morada_cliente, function(err, response_morada_cliente) {
@@ -47,7 +41,7 @@ var geocoder = NodeGeocoder(options_geo);
             qty:  products[i].qty,
             price: products[i].price,
             taxes: [{
-              tax_id: 2361047,
+              tax_id: 2384598,
               value: 23.0
             }]
           });
@@ -66,13 +60,13 @@ var geocoder = NodeGeocoder(options_geo);
             var response_km_json=JSON.parse(response_km);
             //ADICIONAR ISTO AO ARRAY
             products.push({
-              product_id:101381629,
+              product_id:103603259,
               name:'Transporte km',
               exemption_reason: 'M09',
               qty: (response_km_json.rows[0].elements[0].distance.value/1000),
               price: 0.2926,
               taxes: [{
-                tax_id: 2361047,
+                tax_id: 2384598,
                 value: 23.0
               }]
             });
@@ -82,7 +76,7 @@ var geocoder = NodeGeocoder(options_geo);
               company_id:  company_id ,
               date: date,
               expiration_date : expiration_date,
-              document_set_id: 473163,
+              document_set_id: 485783,
               customer_id: 57185941,
               status: 1,
               products: products, 
