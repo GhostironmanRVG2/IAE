@@ -11,10 +11,10 @@ const expressValidator = require('express-validator');
 
 //CREDENCIAIS DO MOLONI
 var moloni = new Moloni({
-	client_id: 'winxgroup',
-	client_secret: 'a8156283c4aa7866e1a2f8bf4737d0ca16e59af9',
-	username: 'a92877@alunos.uminho.pt',
-	password: 'winx2021'
+	client_id: 'topbikes',
+	client_secret: 'a28c743e71a4008ee3b499ed9d5ae73301e3529e',
+	username: 'a87975@alunos.uminho.pt',
+	password: 'TopBikes'
 });
 
 

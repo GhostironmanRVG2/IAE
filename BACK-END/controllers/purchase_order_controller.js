@@ -4,6 +4,7 @@ var qs = require('qs');
 const {credit,http}=require('../authtoken/molonitoken');
 const https=require('https');
 const connect = require('../config/connect');
+const { post } = require('request');
 
 var options_geo = {
   provider: 'google',
@@ -21,21 +22,15 @@ function insert(req,res){
     //IR BUSCAR PARAMETROS AO BODY
     const morada_cliente=req.body.morada_cliente;
     const morada_moloni=req.body.morada_moloni;
-    const company_id = 205166; 
+    const company_id = 209537; 
     const date= req.body.date;
     const expiration_date= req.body.expiration_date;
     const products=req.body.products;
     const supplier_id=req.body.supplier_id;
     const products_length=products.length;
-<<<<<<< HEAD
 //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
 //BUSCAR COORDENADAS GEO
 var geocoder = NodeGeocoder(options_geo);
-=======
-    //ADICIONAR ABA AQUI DO TRANSPORTES E ETC..
-    //BUSCAR COORDENADAS GEO
-    var geocoder = NodeGeocoder(options_geo);
->>>>>>> 4cf3ff7e5e519cf8f3d9d480739ec163e1952c3e
 
     // Using callback
     geocoder.geocode(morada_cliente, function(err, response_morada_cliente) {
@@ -68,7 +63,6 @@ var geocoder = NodeGeocoder(options_geo);
             products.push({
               product_id:101381629,
               name:'Transporte km',
-              exemption_reason: 'M09',
               qty: (response_km_json.rows[0].elements[0].distance.value/1000),
               price: 0.2926,
               taxes: [{
@@ -83,7 +77,7 @@ var geocoder = NodeGeocoder(options_geo);
               date: date,
               expiration_date : expiration_date,
               document_set_id: 473163,
-              customer_id: 57185941,
+              customer_id: 58637341,
               status: 1,
               products: products, 
             });
@@ -223,7 +217,7 @@ function getDoc(req,res){
     const document_id = req.sanitize('document_id').escape();
     //DADOS
     var post_data=  qs.stringify({
-      company_id:  205166 ,
+      company_id: 209537,
     });
 
     //PASSAR OS ARGUMENTOS
@@ -252,10 +246,10 @@ function getDoc(req,res){
         //PEGAR NOS DADOS E PASSAR PARA JSON
         var dt = JSON.parse(k);
         //CRIAR VARIAVEL OUTPUT
+        console.log(dt);
         var output=[];
         //FAZER UM FOR PARA CORRER O DT
         for (let i = 0; i < dt.length; i++) {
-          console.log(dt[i].document_id);
           //CASO OS IDS SEJAM IGUAIS INSERIR OBJETO DENTRO DO OUTPUT  
           if(document_id==(dt[i].document_id)){
             //COLOCA A VARIAVEL DENTRO DO ARRAY
@@ -288,195 +282,59 @@ function getDoc(req,res){
 
 
 
+function update(req,res){
+//FUNCAO QUE RETORNA O TOKEN DO MOLONI
+credit(function(response_token){
+  console.log(response_token);
+  //IR BUSCAR DATA AO BODY
+const date=req.sanitize('date').escape();
+const expiration_date=req.sanitize('expiration_date').escape();
+const products=req.body.products;
+const status=req.sanitize('status').escape();
 
-
-function DelOrder(req,res){
-  credit(function(response){
-    const document_id = req.sanitize('document_id').escape();
-    //DADOS
+   //DADOS A INSERIR
     var post_data=  qs.stringify({
-      company_id:  205166 ,
+      company_id:  209537 ,
+      date: date,
+      expiration_date: expiration_date,
+      document_set_id: 473163,
+      customer_id: 58637341,
+      products: products,
+      status: status
     });
+//CRIAR OPCOES DE LIGACAO DO HTTP REQUEST
+var options_update ={
+  'method': 'POST',
+  'hostname': 'api.moloni.pt',
+  'path': '/v1/purchaseOrder/update/?access_token='+response_token.access_token,
+  'headers': {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Length': post_data.length,
+    "Accept-Charset":"utf-8"
+  },
+};
 
-    //PASSAR OS ARGUMENTOS
-    var options ={
-      'method': 'POST',
-      'hostname': 'api.moloni.pt',
-      'path': '/v1/purchaseOrder/delete/?access_token='+response.access_token,
-      'headers': {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': post_data.length,
-        "Accept-Charset":"utf-8"
-      },
-      'maxRedirects': 20,
-      'transfer-encoding': ''
-    };
-    
-    //INVOCAR METODO HTTP
-    var request=http.request(options, function(response) {
-      var k='';
-      //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
-      response.on('data', function (chunk) {
-        k+=chunk;
-      });
-         
-      response.on('end', function() {
-        //PEGAR NOS DADOS E PASSAR PARA JSON
-        var dt = JSON.parse(k);
-        //CRIAR VARIAVEL OUTPUT
-        var output=[];
-        //FAZER UM FOR PARA CORRER O DT
-        for (let i = 0; i < dt.length; i++) {
-          console.log(dt[i].document_id);
-          //CASO OS IDS SEJAM IGUAIS INSERIR OBJETO DENTRO DO OUTPUT  
-          if(document_id==(dt[i].document_id)){
-            //COLOCA A VARIAVEL DENTRO DO ARRAY
-            output.push(dt[i]);
-          }   
-        }
-        //SE O OUTPUT FOR DIFERENTE DE 0
-        if(output.length!=0){
-          //MANDAR MSG AO PSEUDO ENGENHEIRO DA FRONT END
-          try{
-            //ENVIAR OUTPUT E SETAR STATUS PARA ACOMPLISH
-            res.status(200);
-            res.send(output);
-          }catch(Exception){}
-        }else{
-          try{
-            //ENVIAR MSG DE ERRO E SETAR STATUS PARA 400
-            var empty=[{"msg":"Theres no document ids that match yours","cod":400}];
-            res.status(400);
-            res.send(empty);
-          }catch(Exception){}
-        }
-      });
-    });
-    
-    request.write(post_data)
-    request.end();
-  })
-}
+ //METODO HTTP PARA LIGAR AO MOLONI
+ var update=http.request(options_update, function(response) {
+  var moloni_update_response='';
+  //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+  response.on('data', function (chunk) {
+    moloni_update_response+=chunk;
+  });
+  //RESPOSTA NO FINAL   
+  response.on('end', function() {
+    //PEGAR NOS DADOS E PASSAR PARA JSON
+    var json_moloni_res=JSON.parse(moloni_update_response);
+    console.log(json_moloni_res);
+    res.send(json_moloni_res);
+  });
+
+});
+update.write(post_data);
+update.end();
 
 
-
-
-
-function DelOrderDocument(req, res) {
-  //FUNCAO COM O CALLBACK
-  const document_id = req.sanitize('document_id').escape();
-  //criar e executar a query de leitura na BD
-  connect.con.query('DELETE iae.order, iae.ordered_product FROM iae.order JOIN iae.ordered_product ON iae.order.order_id = iae.ordered_product.order_id WHERE iae.order.document_id = ?', document_id, function (err, rows, fields) {
-    if (!err) {
-      //verifica os resultados se o número de linhas for 0 devolve dados não encontrados, caso contrário envia os resultados (rows).
-      if (rows.length == 0) {
-        res.status(404).send({
-          "msg": "data not found"
-        });
-      } else {
-        res.status(200).send({
-          "msg": "success"
-        });
-      }
-    } else
-      console.log('Error while performing Query.', err);
-  }); 
-}
-
-
-
-
-
-function DoubleDelOrder(req,res){
-  credit(function(response){
-    const document_id = req.sanitize('document_id').escape();
-    //DADOS
-    var post_data=  qs.stringify({
-      company_id:  205166 ,
-    });
-
-    //PASSAR OS ARGUMENTOS
-    var options ={
-      'method': 'POST',
-      'hostname': 'api.moloni.pt',
-      'path': '/v1/purchaseOrder/delete/?access_token='+response.access_token,
-      'headers': {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': post_data.length,
-        "Accept-Charset":"utf-8"
-      },
-      'maxRedirects': 20,
-      'transfer-encoding': ''
-    };
-    
-    //INVOCAR METODO HTTP
-    var request=http.request(options, function(response) {
-      var k='';
-      //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
-      response.on('data', function (chunk) {
-        k+=chunk;
-      });
-         
-      response.on('end', function() {
-        //PEGAR NOS DADOS E PASSAR PARA JSON
-        var dt = JSON.parse(k);
-        //CRIAR VARIAVEL OUTPUT
-        var output=[];
-        //FAZER UM FOR PARA CORRER O DT
-        for (let i = 0; i < dt.length; i++) {
-          console.log(dt[i].document_id);
-          //CASO OS IDS SEJAM IGUAIS INSERIR OBJETO DENTRO DO OUTPUT  
-          if(document_id==(dt[i].document_id)){
-            //COLOCA A VARIAVEL DENTRO DO ARRAY
-            output.push(dt[i]);
-          }   
-        }
-        //SE O OUTPUT FOR DIFERENTE DE 0
-        if(output.length!=0){
-          //MANDAR MSG AO PSEUDO ENGENHEIRO DA FRONT END
-          try{
-            //ENVIAR OUTPUT E SETAR STATUS PARA ACOMPLISH
-            res.status(200);
-            
-
-
-            //FUNCAO COM O CALLBACK
-            const document_id = req.sanitize('document_id').escape();
-            //criar e executar a query de leitura na BD
-            connect.con.query('DELETE iae.order, iae.ordered_product FROM iae.order JOIN iae.ordered_product ON iae.order.order_id = iae.ordered_product.order_id WHERE iae.order.document_id = ?', document_id, function (err, rows, fields) {
-              if (!err) {
-                //verifica os resultados se o número de linhas for 0 devolve dados não encontrados, caso contrário envia os resultados (rows).
-                if (rows.length == 0) {
-                  res.status(404).send({
-                    "msg": "data not found"
-                  });
-                } else {
-                  res.status(200).send({
-                    "msg": "success"
-                  });
-                }
-              } else
-                console.log('Error while performing Query.', err);
-            }); 
-
-
-
-            res.send(output);
-          }catch(Exception){}
-        }else{
-          try{
-            //ENVIAR MSG DE ERRO E SETAR STATUS PARA 400
-            var empty=[{"msg":"Theres no document ids that match yours","cod":400}];
-            res.status(400);
-            res.send(empty);
-          }catch(Exception){}
-        }
-      });
-    });
-    
-    request.write(post_data)
-    request.end();
-  })
+});
 }
 
 
@@ -486,7 +344,5 @@ function DoubleDelOrder(req,res){
 module.exports={
   insert: insert,
   getDoc: getDoc,
-  DoubleDelOrder: DoubleDelOrder,
-  DelOrder: DelOrder,
-  DelOrderDocument: DelOrderDocument,
+  update: update,
 }

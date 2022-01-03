@@ -8,8 +8,8 @@ function getOne(req, res){
     const associated_id = req.sanitize('associated_id').escape();
     
     var params = {
-        company_id: 205166,
-        customer_id: 57185941,
+        company_id: 209537,
+        customer_id: 58637341,
         reverse_associated_documents: [
             {
                 associated_id : associated_id
@@ -41,7 +41,7 @@ function getOne(req, res){
 function getAll(req, res){
     //IR BUSCAR OS PARAMETROS AO BODY
     var params = {
-        company_id: 205166,
+        company_id: 209537,
     };
     //MOLONI GET ONE
     properties.moloni.customers('getAll', params, function (error, result){
