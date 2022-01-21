@@ -301,7 +301,7 @@ function CountOrderwithoutAssociatedDocuments(req, res){
 
 //FUNÇÃO PARA FAZER GET DOS DADOS DO SUPPLIER ID COM MAIS NOTAS DE ENCOMENDA
 function GetOrdersWithSupplierMostMention(req,res){
-  connect.con.query('SELECT iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id FROM iae.order WHERE iae.order.supplier_id = (SELECT iae.order.supplier_id FROM iae.order GROUP BY iae.order.supplier_id ORDER BY COUNT(*) DESC LIMIT 1)', function (error, result){
+  connect.con.query('SELECT iae.supplier.designation, iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id FROM iae.order LEFT JOIN iae.supplier ON iae.order.supplier_id = iae.supplier.supplier_id WHERE iae.order.supplier_id = (SELECT iae.order.supplier_id FROM iae.order GROUP BY iae.order.supplier_id ORDER BY COUNT(*) DESC LIMIT 1)', function (error, result){
     //caso de erro ,manda msg de erro
     if (error){
       //ENVIAR STATUS DE ERRO
