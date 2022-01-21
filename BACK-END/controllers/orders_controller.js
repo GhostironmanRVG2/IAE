@@ -359,7 +359,7 @@ function GetOrdersWithSupplierMostMention(req,res){
 
 //FUNÇÃO PARA FAZER O GET DOS 3 PRODUTOS MAIS ADQUIRIDOS NOS ULTIMOS 30 DIAS
 function Get3TopSuppliesInLast30Days(req,res){
-  connect.con.query('select iae.ordered_product.description, count(iae.ordered_product.description) as number from iae.ordered_product LEFT JOIN iae.order ON iae.ordered_product.order_id = iae.order.order_id WHERE str_to_date(iae.order.date, "%d-%m-%Y") between DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() group by iae.ordered_product.description order by number DESC limit 3 ', function (error, result){
+  connect.con.query('select iae.ordered_product.description, count(iae.ordered_product.description) as number from iae.ordered_product LEFT JOIN iae.order ON iae.ordered_product.order_id = iae.order.order_id WHERE iae.ordered_product.description != "Transporte km" and str_to_date(iae.order.date, "%d-%m-%Y") between DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() group by iae.ordered_product.description order by number DESC limit 3 ', function (error, result){
     //caso de erro ,manda msg de erro
     if (error){
       //ENVIAR STATUS DE ERRO
