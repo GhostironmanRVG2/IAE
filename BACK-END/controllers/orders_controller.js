@@ -1,5 +1,6 @@
 const connect = require('../config/connect');
 const purchase_order_controller = require('./purchase_order_controller');
+const {http}=require('../authtoken/molonitoken');
 //FUNÇÃO PARA DEOLVER OS DADOS DOORDER E SUPPLIER 
 function read(req, res) {
     connect.con.query('SELECT iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id, iae.supplier.designation, count(iae.ordered_product.order_id) as OrderedProducts_orderid_count FROM iae.order LEFT JOIN iae.supplier ON iae.order.supplier_id = iae.supplier.supplier_id LEFT JOIN iae.ordered_product ON iae.ordered_product.order_id = iae.order.order_id group by iae.order.order_id' , function(error, result){
@@ -281,21 +282,66 @@ function SupplierByID(req, res) {
 
 //FUNÇÃO PARA CONTAR O NUMERO DE NOTAS DE ENCOMENDA SEM O ASSOCIATED DOCUMENTS
 function CountOrderwithoutAssociatedDocuments(req, res){
-  connect.con.query('SELECT count(iae.order.order_id) FROM iae.order WHERE iae.order.document_id IS NULL OR iae.order.document_id = "" ', function(error, result){
-    //caso de erro ,manda msg de erro
-    if (error){
-      //ENVIAR STATUS DE ERRO
-      res.status(400).send({
-        "msg": "Error, something went wrong"
+  var options =new URL("http://localhost:4444/PuchaseOrderGetAll");
+  
+  http.request(options, function(response) {
+    var respon='';
+    //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+    response.on('data', function (chunk) {
+      respon+=chunk;
     });
-    //PRINTAR NA CONSOLA ERRO
-      return console.error(error);
-    }else{
-    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
-    console.log(result);
-    res.send(result);
-    }
-});
+    //RESPOSTA NO FINAL   
+    response.on('end', function() {
+      //PEGAR NOS DADOS E PASSAR PARA JSON
+      var json_moloni_res=JSON.parse(respon);
+      console.log(json_moloni_res);
+
+      //CRIAR ARRAY DE DOCUMENT ID SEM ASSOCIATED
+      console.log(json_moloni_res[0].document_id);
+      console.table(json_moloni_res);
+      console.log("Associated docs:"+json_moloni_res[0].associated_documents.length);
+      var documents_array=[];
+      for (let i = 0; i < json_moloni_res.length; i++) {
+          
+        if(json_moloni_res[i].associated_documents.length==0){
+          documents_array.push(json_moloni_res[i].document_id);
+        }
+        
+      }
+
+      console.log(documents_array);
+      
+      
+      connect.con.query('SELECT count(iae.order.order_id) FROM iae.order WHERE iae.order.document_id IS NULL OR iae.order.document_id = "" ', function(error, result){
+        //caso de erro ,manda msg de erro
+        if (error){
+          //ENVIAR STATUS DE ERRO
+          res.status(400).send({
+            "msg": "Error, something went wrong"
+        });
+        //PRINTAR NA CONSOLA ERRO
+          return console.error(error);
+        }else{
+        //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+        console.log(result);
+        res.send(result);
+        }
+    });
+
+
+
+    });
+  
+  }).end();
+
+
+
+
+
+
+
+
+  
 }
 
 
