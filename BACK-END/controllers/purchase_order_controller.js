@@ -380,7 +380,6 @@ var respostafinal=http.request(options_update, function(response) {
   response.on('end', function() {
     //PEGAR NOS DADOS E PASSAR PARA JSON
     var json_moloni_res=JSON.parse(moloni_update_response);
-    console.log(json_moloni_res);
     res.send(json_moloni_res);
   });
 

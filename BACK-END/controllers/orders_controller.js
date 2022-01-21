@@ -294,25 +294,17 @@ function CountOrderwithoutAssociatedDocuments(req, res){
     response.on('end', function() {
       //PEGAR NOS DADOS E PASSAR PARA JSON
       var json_moloni_res=JSON.parse(respon);
-      console.log(json_moloni_res);
 
       //CRIAR ARRAY DE DOCUMENT ID SEM ASSOCIATED
-      console.log(json_moloni_res[0].document_id);
-      console.table(json_moloni_res);
-      console.log("Associated docs:"+json_moloni_res[0].associated_documents.length);
       var documents_array=[];
       for (let i = 0; i < json_moloni_res.length; i++) {
           
-        if(json_moloni_res[i].associated_documents.length==0){
+        if(json_moloni_res[i].reverse_associated_documents.length==0){
           documents_array.push(json_moloni_res[i].document_id);
         }
         
       }
-
-      console.log(documents_array);
-      
-      
-      connect.con.query('SELECT count(iae.order.order_id) FROM iae.order WHERE iae.order.document_id IS NULL OR iae.order.document_id = "" ', function(error, result){
+      connect.con.query('SELECT count(iae.order.order_id) as count FROM iae.order WHERE iae.order.document_id IN ('+documents_array+')', function(error, result){
         //caso de erro ,manda msg de erro
         if (error){
           //ENVIAR STATUS DE ERRO
