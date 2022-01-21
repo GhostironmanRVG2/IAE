@@ -410,7 +410,7 @@ function GetTotalNumberofOrdersInCurrentMonth(req,res){
 
 //FUNÇÃO PARA FAZER O COUNT DO NUMERO DE ORDERS COM STATUS_PAYMENT PENDING
 function CountPaymentStatusPending(req,res){
-  connect.con.query('SELECT COUNT(iae.order.order_id) FROM iae.order WHERE iae.order.status_payment = "Pending"', function (error, result){
+  connect.con.query('SELECT COUNT(iae.order.order_id) as total FROM iae.order WHERE iae.order.status_payment = "Pending"', function (error, result){
     //caso de erro ,manda msg de erro
     if (error){
       //ENVIAR STATUS DE ERRO
