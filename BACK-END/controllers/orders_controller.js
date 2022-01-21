@@ -301,7 +301,7 @@ function CountOrderwithoutAssociatedDocuments(req, res){
 
 //FUNÇÃO PARA FAZER GET DOS DADOS DO SUPPLIER ID COM MAIS NOTAS DE ENCOMENDA
 function GetOrdersWithSupplierMostMention(req,res){
-  connect.con.query('SELECT iae.supplier.designation, iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id FROM iae.order LEFT JOIN iae.supplier ON iae.order.supplier_id = iae.supplier.supplier_id WHERE iae.order.supplier_id = (SELECT iae.order.supplier_id FROM iae.order GROUP BY iae.order.supplier_id ORDER BY COUNT(*) DESC LIMIT 1)', function (error, result){
+  connect.con.query('SELECT  (select round(sum(iae.order.total), 2) from iae.order) as total_order, iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id FROM iae.order WHERE iae.order.supplier_id = (SELECT iae.order.supplier_id FROM iae.order GROUP BY iae.order.supplier_id ORDER BY COUNT(*) DESC LIMIT 1) and str_to_date(iae.order.date, "%d-%m-%Y") between DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()', function (error, result){
     //caso de erro ,manda msg de erro
     if (error){
       //ENVIAR STATUS DE ERRO
@@ -320,7 +320,7 @@ function GetOrdersWithSupplierMostMention(req,res){
 
 
 //FUNÇÃO PARA FAZER O GET DOS 3 PRODUTOS MAIS ADQUIRIDOS NOS ULTIMOS 30 DIAS
-function Top3ProductsInLast30Days(req,res){
+function GetOrdersFromTopSupplierInLast30Days(req,res){
   connect.con.query('SELECT iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id FROM iae.order WHERE iae.order.supplier_id = (SELECT iae.order.supplier_id FROM iae.order GROUP BY iae.order.supplier_id ORDER BY COUNT(*) DESC LIMIT 1)', function (error, result){
     //caso de erro ,manda msg de erro
     if (error){
