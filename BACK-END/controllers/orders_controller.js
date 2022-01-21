@@ -378,7 +378,7 @@ function Get3TopSuppliesInLast30Days(req,res){
 
 //FUNÇÃO PARA FAZER O CONTAR O TOTAL GASTO NUM MÊS (TOTAL DO VALOR DAS ORDERS DO MES CORRENTE, TODOS OS SUPPLIERS)
 function GetTotalCostInLast30Days(req,res){
-  connect.con.query(' ', function (error, result){
+  connect.con.query('SELECT round(sum(iae.order.total), 2) as total_cost FROM iae.order WHERE month(str_to_date(iae.order.date, "%d-%m-%Y")) = month(now()) and year(str_to_date(iae.order.date, "%d-%m-%Y")) = year(now())', function (error, result){
     //caso de erro ,manda msg de erro
     if (error){
       //ENVIAR STATUS DE ERRO
@@ -415,4 +415,5 @@ module.exports = {
     CountOrderwithoutAssociatedDocuments: CountOrderwithoutAssociatedDocuments,
     GetOrdersWithSupplierMostMention: GetOrdersWithSupplierMostMention,
     Get3TopSuppliesInLast30Days: Get3TopSuppliesInLast30Days,
+    GetTotalCostInLast30Days: GetTotalCostInLast30Days,
 }
