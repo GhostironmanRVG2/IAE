@@ -339,7 +339,7 @@ function CountOrderwithoutAssociatedDocuments(req, res){
 
 //FUNÇÃO PARA FAZER GET DOS DADOS DO SUPPLIER ID COM MAIS NOTAS DE ENCOMENDA
 function GetOrdersWithSupplierMostMention(req,res){
-  connect.con.query('SELECT  (select round(sum(iae.order.total), 2) from iae.order) as total_order, iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id FROM iae.order WHERE iae.order.supplier_id = (SELECT iae.order.supplier_id FROM iae.order GROUP BY iae.order.supplier_id ORDER BY COUNT(*) DESC LIMIT 1) and str_to_date(iae.order.date, "%d-%m-%Y") between DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()', function (error, result){
+  connect.con.query('SELECT  (select round(sum(iae.order.total), 2) from iae.order) as total_order, iae.supplier.designation as supplier_designation, iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id FROM iae.order left join iae.supplier on iae.order.supplier_id = iae.supplier.supplier_id WHERE iae.order.supplier_id = (SELECT iae.order.supplier_id FROM iae.order GROUP BY iae.order.supplier_id ORDER BY COUNT(*) DESC LIMIT 1) and str_to_date(iae.order.date, "%d-%m-%Y") between DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()', function (error, result){
     //caso de erro ,manda msg de erro
     if (error){
       //ENVIAR STATUS DE ERRO
@@ -375,6 +375,29 @@ function Get3TopSuppliesInLast30Days(req,res){
     }
 });
 }
+
+//FUNÇÃO PARA FAZER O CONTAR O TOTAL GASTO NUM MÊS (TOTAL DO VALOR DAS ORDERS DO MES CORRENTE, TODOS OS SUPPLIERS)
+function GetTotalCostInLast30Days(req,res){
+  connect.con.query(' ', function (error, result){
+    //caso de erro ,manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Error, something went wrong"
+    });
+    //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+    console.log(result);
+    res.send(result);
+    }
+});
+}
+
+
+
+
 
 
 module.exports = {
