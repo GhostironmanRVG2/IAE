@@ -279,6 +279,64 @@ function SupplierByID(req, res) {
 
 
 
+//FUNÇÃO PARA CONTAR O NUMERO DE NOTAS DE ENCOMENDA SEM O ASSOCIATED DOCUMENTS
+function CountOrderwithoutAssociatedDocuments(req, res){
+  connect.con.query('SELECT count(iae.order.order_id) FROM iae.order WHERE iae.order.document_id IS NULL OR iae.order.document_id = "" ', function(error, result){
+    //caso de erro ,manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Error, something went wrong"
+    });
+    //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+    console.log(result);
+    res.send(result);
+    }
+});
+}
+
+
+//FUNÇÃO PARA FAZER GET DOS DADOS DO SUPPLIER ID COM MAIS NOTAS DE ENCOMENDA
+function GetOrdersWithSupplierMostMention(req,res){
+  connect.con.query('SELECT iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id FROM iae.order WHERE iae.order.supplier_id = (SELECT iae.order.supplier_id FROM iae.order GROUP BY iae.order.supplier_id ORDER BY COUNT(*) DESC LIMIT 1)', function (error, result){
+    //caso de erro ,manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Error, something went wrong"
+    });
+    //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+    console.log(result);
+    res.send(result);
+    }
+});
+}
+
+
+//FUNÇÃO PARA FAZER O GET DOS 3 PRODUTOS MAIS ADQUIRIDOS NOS ULTIMOS 30 DIAS
+function Top3ProductsInLast30Days(req,res){
+  connect.con.query('SELECT iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id FROM iae.order WHERE iae.order.supplier_id = (SELECT iae.order.supplier_id FROM iae.order GROUP BY iae.order.supplier_id ORDER BY COUNT(*) DESC LIMIT 1)', function (error, result){
+    //caso de erro ,manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Error, something went wrong"
+    });
+    //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+    console.log(result);
+    res.send(result);
+    }
+});
+}
 
 
 module.exports = {
@@ -293,4 +351,6 @@ module.exports = {
     OrderProductedByOrderID: OrderProductedByOrderID,
     OrderSupplierByOrderID: OrderSupplierByOrderID,
     SupplierByID: SupplierByID,
+    CountOrderwithoutAssociatedDocuments: CountOrderwithoutAssociatedDocuments,
+    GetOrdersWithSupplierMostMention: GetOrdersWithSupplierMostMention,
 }

@@ -24,4 +24,8 @@ app.get('/OrderProducedSuppliertByOrderID/:order_id', orders.OrderProductedByOrd
 //ORDER_ID
 app.get('/OrderSupplierByOrderId/:order_id', orders.OrderSupplierByOrderID); 
 //GET DOS DADOS DE UM SUPPLIER PELO ID
-app.get('/SupplierGetById/:supplier_id', orders.SupplierByID);
+app.get('/SupplierGetById/:supplier_id', orders.SupplierByID); 
+//COUNT DOS ORDER SEM DOCUMENT ID
+app.get('/CountOrderWithoutAssociatedDocuments/', orders.CountOrderwithoutAssociatedDocuments);
+//GET DOS ORDERS COM O SUPPLIER ID MAIS MENCIONADO
+app.get('/GetOrdersWithSupplierMostMention/', orders.GetOrdersWithSupplierMostMention);
