@@ -16,5 +16,8 @@ products[x][exemption_reason]
 app.post("/InsertPurchaseOrder",purchase.insert);
 //FAZER UM GET POR
 app.get("/PurchaseOrderByDoc/:document_id",purchase.getDoc); 
+//FAZER UM GET DE TODOS OS PURCHASE ORDER
+app.get("/PuchaseOrderGetAll",purchase.getAll);
 //PUT
 app.put("/UpdatePurchase",purchase.update); 
+

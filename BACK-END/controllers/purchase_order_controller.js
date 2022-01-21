@@ -344,6 +344,59 @@ update.end();
 }
 
 
+function getAll(req,res){
+  const company_id=209537;
+ //FUNCAO DO RESPONSE_TOKEN 
+  credit(function(response_token){
+
+
+     //DADOS A INSERIR
+     var post_data=  qs.stringify({
+      company_id: company_id
+    });
+//CRIAR OPCOES DE LIGACAO DO HTTP REQUEST
+var options_update ={
+  'method': 'POST',
+  'hostname': 'api.moloni.pt',
+  'path': '/v1/purchaseOrder/getAll/?access_token='+response_token.access_token,
+  'headers': {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Length': post_data.length,
+    "Accept-Charset":"utf-8"
+  },
+};
+
+
+
+
+//METODO HTTP PARA LIGAR AO MOLONI
+var respostafinal=http.request(options_update, function(response) {
+  var moloni_update_response='';
+  //RECEBER OS DADOS E ENVIAR PARA A CALLBACK
+  response.on('data', function (chunk) {
+    moloni_update_response+=chunk;
+  });
+  //RESPOSTA NO FINAL   
+  response.on('end', function() {
+    //PEGAR NOS DADOS E PASSAR PARA JSON
+    var json_moloni_res=JSON.parse(moloni_update_response);
+    console.log(json_moloni_res);
+    res.send(json_moloni_res);
+  });
+
+});
+respostafinal.write(post_data);
+respostafinal.end();
+
+
+
+
+  
+  });
+
+}
+
+
 
 
 
@@ -351,4 +404,5 @@ module.exports={
   insert: insert,
   getDoc: getDoc,
   update: update,
+  getAll: getAll
 }
