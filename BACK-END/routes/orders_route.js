@@ -39,3 +39,5 @@ app.get('/GetTotalNumberofOrdersInCurrentMonth/', orders.GetTotalNumberofOrdersI
 app.get('/CountPaymentStatusPending/', orders.CountPaymentStatusPending);
 //PUT DO STATUS_PAYMENT NO ORDER
 app.put('/PutPaymentStatusPending/:order_id', orders.PutPaymentStatusPending);
+//GET DO VALOR TOTAL DOS ORDER DO MES PASSADO E DO MES ATUAL
+app.get('/GetTotalCostInCurrentAndLastMonth/', orders.GetTotalCostInCurrentAndLastMonth);

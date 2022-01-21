@@ -453,6 +453,26 @@ function PutPaymentStatusPending(req,res){
 }
 
 
+//FUNÇÃO PARA FAZER O CONTAR O TOTAL GASTO NO MÊS ATUAL E O MÊS ANTERIOR (TOTAL DO VALOR DAS ORDERS DO MES CORRENTE, TODOS OS SUPPLIERS)
+function GetTotalCostInCurrentAndLastMonth(req,res){
+  connect.con.query('SELECT (SELECT round(sum(iae.order.total), 2) FROM iae.order WHERE month(str_to_date(iae.order.date, "%d-%m-%Y")) = month(current_date - interval 1 month) and year(str_to_date(iae.order.date, "%d-%m-%Y")) = year(current_date - interval 1 month)) as total_cost_previous_month, round(sum(iae.order.total), 2) as total_cost_current_year FROM iae.order WHERE month(str_to_date(iae.order.date, "%d-%m-%Y")) = month(now()) and year(str_to_date(iae.order.date, "%d-%m-%Y")) = year(now())', function (error, result){
+    //caso de erro ,manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Error, something went wrong"
+    });
+    //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+    console.log(result);
+    res.send(result);
+    }
+});
+}
+
+
 module.exports = {
     read: read,
     GetOrderId: GetOrderId,
@@ -472,4 +492,5 @@ module.exports = {
     GetTotalNumberofOrdersInCurrentMonth: GetTotalNumberofOrdersInCurrentMonth,
     CountPaymentStatusPending: CountPaymentStatusPending,
     PutPaymentStatusPending: PutPaymentStatusPending,
+    GetTotalCostInCurrentAndLastMonth: GetTotalCostInCurrentAndLastMonth,
 }
