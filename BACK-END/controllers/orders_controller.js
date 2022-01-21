@@ -299,14 +299,12 @@ function CountOrderwithoutAssociatedDocuments(req, res){
       var documents_array=[];
       for (let i = 0; i < json_moloni_res.length; i++) {
           
-        if(json_moloni_res[i].associated_documents.length==0){
+        if(json_moloni_res[i].reverse_associated_documents.length==0){
           documents_array.push(json_moloni_res[i].document_id);
         }
         
       }
-      
-      var arr = documents_array.map( function(el) { return el.document_id; });
-      connect.con.query('SELECT count(iae.order.order_id) as count FROM iae.order WHERE iae.order.document_id IN ('+connect.con.escape(arr)+')', function(error, result){
+      connect.con.query('SELECT count(iae.order.order_id) as count FROM iae.order WHERE iae.order.document_id IN ('+documents_array+')', function(error, result){
         //caso de erro ,manda msg de erro
         if (error){
           //ENVIAR STATUS DE ERRO
