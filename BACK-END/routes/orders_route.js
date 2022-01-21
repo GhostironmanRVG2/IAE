@@ -27,5 +27,7 @@ app.get('/OrderSupplierByOrderId/:order_id', orders.OrderSupplierByOrderID);
 app.get('/SupplierGetById/:supplier_id', orders.SupplierByID); 
 //COUNT DOS ORDER SEM DOCUMENT ID
 app.get('/CountOrderWithoutAssociatedDocuments/', orders.CountOrderwithoutAssociatedDocuments);
-//GET DOS ORDERS COM O SUPPLIER ID MAIS MENCIONADO
-app.get('/GetOrdersWithSupplierMostMention/', orders.GetOrdersWithSupplierMostMention);
+//GET DOS ORDERS COM O SUPPLIER ID MAIS MENCIONADO 
+app.get('/GetOrdersWithSupplierMostMention/', orders.GetOrdersWithSupplierMostMention); 
+//GET 3 TOP SUPPLIES FROM THE LAST 30 DAYS
+app.get('/Get3TopSuppliesInLast30Days/', orders.Get3TopSuppliesInLast30Days);

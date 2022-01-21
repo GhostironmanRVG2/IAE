@@ -333,14 +333,6 @@ function CountOrderwithoutAssociatedDocuments(req, res){
     });
   
   }).end();
-
-
-
-
-
-
-
-
   
 }
 
@@ -366,8 +358,8 @@ function GetOrdersWithSupplierMostMention(req,res){
 
 
 //FUNÇÃO PARA FAZER O GET DOS 3 PRODUTOS MAIS ADQUIRIDOS NOS ULTIMOS 30 DIAS
-function GetOrdersFromTopSupplierInLast30Days(req,res){
-  connect.con.query('SELECT iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id FROM iae.order WHERE iae.order.supplier_id = (SELECT iae.order.supplier_id FROM iae.order GROUP BY iae.order.supplier_id ORDER BY COUNT(*) DESC LIMIT 1)', function (error, result){
+function Get3TopSuppliesInLast30Days(req,res){
+  connect.con.query('select iae.ordered_product.description, count(iae.ordered_product.description) as number from iae.ordered_product LEFT JOIN iae.order ON iae.ordered_product.order_id = iae.order.order_id WHERE str_to_date(iae.order.date, "%d-%m-%Y") between DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() group by iae.ordered_product.description order by count DESC limit 3 ', function (error, result){
     //caso de erro ,manda msg de erro
     if (error){
       //ENVIAR STATUS DE ERRO
@@ -399,4 +391,5 @@ module.exports = {
     SupplierByID: SupplierByID,
     CountOrderwithoutAssociatedDocuments: CountOrderwithoutAssociatedDocuments,
     GetOrdersWithSupplierMostMention: GetOrdersWithSupplierMostMention,
+    Get3TopSuppliesInLast30Days: Get3TopSuppliesInLast30Days,
 }
