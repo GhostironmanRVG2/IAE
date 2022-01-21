@@ -35,3 +35,7 @@ app.get('/Get3TopSuppliesInLast30Days/', orders.Get3TopSuppliesInLast30Days);
 app.get('/GetTotalCostInCurrentMonth/', orders.GetTotalCostInCurrentMonth);
 //GET DO NUMERO DE ORDERS NO MES ATUAL 
 app.get('/GetTotalNumberofOrdersInCurrentMonth/', orders.GetTotalNumberofOrdersInCurrentMonth);
+//COUNT DO NUMERO DE ORDERS COM O STATUS_PAYMENT "Pending"
+app.get('/CountPaymentStatusPending/', orders.CountPaymentStatusPending);
+//PUT DO STATUS_PAYMENT NO ORDER
+app.put('/PutPaymentStatusPending/:order_id', orders.PutPaymentStatusPending);

@@ -3,7 +3,7 @@ const purchase_order_controller = require('./purchase_order_controller');
 const {http}=require('../authtoken/molonitoken');
 //FUNÇÃO PARA DEOLVER OS DADOS DOORDER E SUPPLIER 
 function read(req, res) {
-    connect.con.query('SELECT iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id, iae.supplier.designation, count(iae.ordered_product.order_id) as OrderedProducts_orderid_count FROM iae.order LEFT JOIN iae.supplier ON iae.order.supplier_id = iae.supplier.supplier_id LEFT JOIN iae.ordered_product ON iae.ordered_product.order_id = iae.order.order_id group by iae.order.order_id' , function(error, result){
+    connect.con.query('SELECT iae.order.order_id, iae.order.supplier_id, iae.order.date, iae.order.expire_date, iae.order.total, iae.order.document_id, iae.order.status_payment, iae.supplier.designation, count(iae.ordered_product.order_id) as OrderedProducts_orderid_count FROM iae.order LEFT JOIN iae.supplier ON iae.order.supplier_id = iae.supplier.supplier_id LEFT JOIN iae.ordered_product ON iae.ordered_product.order_id = iae.order.order_id group by iae.order.order_id' , function(error, result){
       //caso de erro ,manda msg de erro
         if (error){
           //ENVIAR STATUS DE ERRO
@@ -23,7 +23,7 @@ function read(req, res) {
 //FUNÇÃO PARA DEVOLVER OS VALORES DO ORDER E ORDERED_PRODUCT COM O MESMO order_id
 function OrderProductByID(req, res) {
     const order_id = req.sanitize('order_id').escape();
-    connect.con.query('SELECT iae.order.order_id as order_id, iae.order.supplier_id as supplier_id_order, iae.order.date as date_order, iae.order.expire_date as expire_date_order, iae.order.total as total_order, iae.order.document_id as document_id_order, iae.ordered_product.description as designation_ordered_product, iae.ordered_product.order_id as order_id_ordered_product, iae.ordered_product.ordered_product_id as ordered_product_id_ordered_product, iae.ordered_product.quantity as quantity_ordered_product, iae.ordered_product.total as total_ordered_product, iae.ordered_product.unit_price as unit_price_ordered_product FROM iae.ordered_product JOIN iae.order ON iae.ordered_product.order_id = iae.order.order_id WHERE iae.order.order_id = ?', order_id, function(error, result) {
+    connect.con.query('SELECT iae.order.order_id as order_id, iae.order.supplier_id as supplier_id_order, iae.order.date as date_order, iae.order.expire_date as expire_date_order, iae.order.total as total_order, iae.order.document_id as document_id_order, iae.order.status_payment as status_payment, iae.ordered_product.description as designation_ordered_product, iae.ordered_product.order_id as order_id_ordered_product, iae.ordered_product.ordered_product_id as ordered_product_id_ordered_product, iae.ordered_product.quantity as quantity_ordered_product, iae.ordered_product.total as total_ordered_product, iae.ordered_product.unit_price as unit_price_ordered_product FROM iae.ordered_product JOIN iae.order ON iae.ordered_product.order_id = iae.order.order_id WHERE iae.order.order_id = ?', order_id, function(error, result) {
       //caso de erro ,manda msg de erro
       if (error){
         //ENVIAR STATUS DE ERRO
@@ -239,7 +239,7 @@ function OrderProductedByOrderID(req, res) {
 //FUNÇÃO PARA DEVOLVER OS VALORES DO ORDER E SUPPLIER PELO order_id
 function OrderSupplierByOrderID(req, res) {
   const order_id = req.sanitize('order_id').escape();
-  connect.con.query('SELECT iae.order.order_id as order_id, iae.order.date as date_order, iae.order.expire_date as expire_date_order, iae.order.total as total_order, iae.order.document_id as document_id_order, iae.supplier.supplier_id as supplier_id, iae.supplier.designation as designation_supplier, iae.supplier.nif as nif_supplier, iae.supplier.morada as morada_supplier, iae.supplier.zip_code as zip_code_supplier, iae.supplier.district as district_supplier, iae.supplier.county as county_supplier FROM iae.order LEFT JOIN iae.supplier ON iae.order.supplier_id = iae.supplier.supplier_id WHERE iae.order.order_id = ? group by iae.order.order_id', order_id, function(error, result) {
+  connect.con.query('SELECT iae.order.order_id as order_id, iae.order.date as date_order, iae.order.expire_date as expire_date_order, iae.order.total as total_order, iae.order.document_id as document_id_order, iae.order.status_payment as status_payment, iae.supplier.supplier_id as supplier_id, iae.supplier.designation as designation_supplier, iae.supplier.nif as nif_supplier, iae.supplier.morada as morada_supplier, iae.supplier.zip_code as zip_code_supplier, iae.supplier.district as district_supplier, iae.supplier.county as county_supplier FROM iae.order LEFT JOIN iae.supplier ON iae.order.supplier_id = iae.supplier.supplier_id WHERE iae.order.order_id = ? group by iae.order.order_id', order_id, function(error, result) {
     //caso de erro ,manda msg de erro
     if (error){
       //ENVIAR STATUS DE ERRO
@@ -416,6 +416,50 @@ function GetTotalNumberofOrdersInCurrentMonth(req,res){
 }
 
 
+//FUNÇÃO PARA FAZER O COUNT DO NUMERO DE ORDERS COM STATUS_PAYMENT PENDING
+function CountPaymentStatusPending(req,res){
+  connect.con.query('SELECT COUNT(iae.order.order_id) FROM iae.order WHERE iae.order.status_payment = "Pending"', function (error, result){
+    //caso de erro ,manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Error, something went wrong"
+    });
+    //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+    console.log(result);
+    res.send(result);
+    }
+});
+}
+
+
+
+//FUNÇÃO PARA FAZER UPDATE DO STATUS PAYMENT
+function PutPaymentStatusPending(req,res){
+  //parametros
+  const order_id = req.sanitize('order_id').escape();
+  const status_payment = req.sanitize('status_payment').escape();
+
+  connect.con.query('UPDATE iae.order SET iae.order.status_payment = ? WHERE order_id = ?', [status_payment, order_id], function (error, result, fields){
+    //caso de erro ,manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Error, something went wrong"
+    });
+    //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+    console.log('UPDATE COM SUCESSO');
+    res.send('UPDATE COM SUCESSO');
+    }
+});
+}
+
 
 module.exports = {
     read: read,
@@ -434,4 +478,6 @@ module.exports = {
     Get3TopSuppliesInLast30Days: Get3TopSuppliesInLast30Days,
     GetTotalCostInCurrentMonth: GetTotalCostInCurrentMonth,
     GetTotalNumberofOrdersInCurrentMonth: GetTotalNumberofOrdersInCurrentMonth,
+    CountPaymentStatusPending: CountPaymentStatusPending,
+    PutPaymentStatusPending: PutPaymentStatusPending,
 }
