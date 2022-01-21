@@ -32,4 +32,6 @@ app.get('/GetOrdersWithSupplierMostMention/', orders.GetOrdersWithSupplierMostMe
 //GET 3 TOP SUPPLIES FROM THE LAST 30 DAYS
 app.get('/Get3TopSuppliesInLast30Days/', orders.Get3TopSuppliesInLast30Days);
 //GET DO CUSTO TOTAL DAS ORDERS NO MES ATUAL
-app.get('/GetTotalCostInLast30Days/', orders.GetTotalCostInLast30Days);
+app.get('/GetTotalCostInLast30Days/', orders.GetTotalCostInCurrentMonth);
+//GET DO NUMERO DE ORDERS NO MES ATUAL 
+app.get('/GetTotalNumberofOrdersInCurrentMonth/', orders.GetTotalNumberofOrdersInCurrentMonth);

@@ -377,7 +377,7 @@ function Get3TopSuppliesInLast30Days(req,res){
 }
 
 //FUNÇÃO PARA FAZER O CONTAR O TOTAL GASTO NUM MÊS (TOTAL DO VALOR DAS ORDERS DO MES CORRENTE, TODOS OS SUPPLIERS)
-function GetTotalCostInLast30Days(req,res){
+function GetTotalCostInCurrentMonth(req,res){
   connect.con.query('SELECT round(sum(iae.order.total), 2) as total_cost FROM iae.order WHERE month(str_to_date(iae.order.date, "%d-%m-%Y")) = month(now()) and year(str_to_date(iae.order.date, "%d-%m-%Y")) = year(now())', function (error, result){
     //caso de erro ,manda msg de erro
     if (error){
@@ -396,7 +396,24 @@ function GetTotalCostInLast30Days(req,res){
 }
 
 
-
+//FUNÇÃO PARA FAZER O CONTAR O TOTAL GASTO NUM MÊS (TOTAL DO VALOR DAS ORDERS DO MES CORRENTE, TODOS OS SUPPLIERS)
+function GetTotalNumberofOrdersInCurrentMonth(req,res){
+  connect.con.query('SELECT COUNT(iae.order.order_id) as total_cost FROM iae.order WHERE month(str_to_date(iae.order.date, "%d-%m-%Y")) = month(now()) and year(str_to_date(iae.order.date, "%d-%m-%Y")) = year(now())', function (error, result){
+    //caso de erro ,manda msg de erro
+    if (error){
+      //ENVIAR STATUS DE ERRO
+      res.status(400).send({
+        "msg": "Error, something went wrong"
+    });
+    //PRINTAR NA CONSOLA ERRO
+      return console.error(error);
+    }else{
+    //CASO DE CERTO , PRINTAR ERRO E MANDAR O ERRO
+    console.log(result);
+    res.send(result);
+    }
+});
+}
 
 
 
@@ -415,5 +432,6 @@ module.exports = {
     CountOrderwithoutAssociatedDocuments: CountOrderwithoutAssociatedDocuments,
     GetOrdersWithSupplierMostMention: GetOrdersWithSupplierMostMention,
     Get3TopSuppliesInLast30Days: Get3TopSuppliesInLast30Days,
-    GetTotalCostInLast30Days: GetTotalCostInLast30Days,
+    GetTotalCostInCurrentMonth: GetTotalCostInCurrentMonth,
+    GetTotalNumberofOrdersInCurrentMonth: GetTotalNumberofOrdersInCurrentMonth,
 }
